@@ -294,7 +294,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        .settings-form input {
+        .settings-form input, .settings-form select {
             width: 100%;
             padding: 10px;
             margin: 8px 0 18px 0;
@@ -396,6 +396,7 @@
             <h3>PulseDash Admin</h3>
             <ul>
                 <li id="menu-dashboard" class="active" onclick="switchTab('dashboard')">🏠 Dashboard</li>
+                <li id="menu-withdraw" onclick="switchTab('withdraw')">💸 Withdraw</li>
                 <li id="menu-analytics" onclick="switchTab('analytics')">📊 Analytics</li>
                 <li id="menu-settings" onclick="switchTab('settings')">⚙️ Settings</li>
             </ul>
@@ -437,7 +438,7 @@
                             <form onsubmit="handleAddTransaction(event)">
                                 <div class="input-group" style="margin-top: 10px;">
                                     <label>Description / Title</label>
-                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Deposit, Withdrawal" required>
+                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Deposit" required>
                                 </div>
                                 <div class="input-group">
                                     <label>Amount ($)</label>
@@ -449,7 +450,6 @@
                                         <option value="income">Income (+)</option>
                                         <option value="deposit">Deposit (+)</option>
                                         <option value="expense">Expense (-)</option>
-                                        <option value="withdraw">Withdrawal (-)</option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn-save" style="width: 100%; margin-top: 5px;">Add Entry</button>
@@ -476,7 +476,37 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: ANALYTICS -->
+                <!-- TAB 2: WITHDRAW PAGE -->
+                <div id="tab-withdraw" class="tab-content hidden">
+                    <div class="settings-form" style="max-width: 600px;">
+                        <h3 style="margin-bottom: 15px;">Withdrawal Request</h3>
+                        <div id="withdrawMsg" class="msg-box"></div>
+                        
+                        <form onsubmit="handleWithdrawal(event)">
+                            <label>Payment Gateway / Bank</label>
+                            <select id="withdrawGateway" required>
+                                <option value="" disabled selected>Select Payment Gateway</option>
+                                <option value="Easypaisa">Easypaisa</option>
+                                <option value="JazzCash">JazzCash</option>
+                                <option value="Bank Transfer">Bank Transfer (Meezan, HBL, Allied, etc.)</option>
+                                <option value="Crypto USDT">USDT / Crypto Wallet</option>
+                            </select>
+
+                            <label>Account Holder Name</label>
+                            <input type="text" id="withdrawAccountName" placeholder="e.g. Alex Johnson" required>
+
+                            <label>Account Number / Mobile / Address</label>
+                            <input type="text" id="withdrawAccountNumber" placeholder="03001234567 / Bank IBAN / Wallet Address" required>
+
+                            <label>Withdrawal Amount ($)</label>
+                            <input type="number" step="0.01" id="withdrawAmount" placeholder="0.00" required>
+
+                            <button type="submit" class="btn-save" style="background: #e74c3c;">Submit Withdrawal Request</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- TAB 3: ANALYTICS -->
                 <div id="tab-analytics" class="tab-content hidden">
                     <div class="cards-grid">
                         <div class="card">
@@ -499,7 +529,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: SETTINGS -->
+                <!-- TAB 4: SETTINGS -->
                 <div id="tab-settings" class="tab-content hidden">
                     <div class="settings-form">
                         <h3 style="margin-bottom: 15px;">Profile Settings</h3>
@@ -663,17 +693,66 @@
             currentUser.transactions.unshift(newTrans);
 
             // Sync with Local Storage
+            syncUserData();
+
+            // Clear inputs & update UI
+            document.getElementById('transDesc').value = '';
+            document.getElementById('transAmount').value = '';
+            updateDashboardUI();
+        }
+
+        // ================= WITHDRAWAL SYSTEM =================
+        function handleWithdrawal(e) {
+            e.preventDefault();
+            const gateway = document.getElementById('withdrawGateway').value;
+            const accountName = document.getElementById('withdrawAccountName').value.trim();
+            const accountNumber = document.getElementById('withdrawAccountNumber').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const msgBox = document.getElementById('withdrawMsg');
+
+            // Current Available Balance Calculation
+            let currentBalance = 0;
+            currentUser.transactions.forEach(t => {
+                if (t.type === 'income' || t.type === 'deposit') {
+                    currentBalance += t.amount;
+                } else {
+                    currentBalance -= t.amount;
+                }
+            });
+
+            if (amount > currentBalance) {
+                msgBox.className = "msg-box error-msg";
+                msgBox.textContent = "Insufficient funds! Your withdrawal amount exceeds available balance.";
+                msgBox.style.display = "block";
+                return;
+            }
+
+            const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const withdrawDesc = `Withdrawal (${gateway}) - ${accountName}`;
+
+            const newTrans = { desc: withdrawDesc, amount, type: 'withdraw', date };
+            currentUser.transactions.unshift(newTrans);
+
+            syncUserData();
+
+            msgBox.className = "msg-box success-msg";
+            msgBox.textContent = `Withdrawal request for $${amount.toFixed(2)} to ${gateway} submitted successfully!`;
+            msgBox.style.display = "block";
+
+            document.getElementById('withdrawAccountName').value = '';
+            document.getElementById('withdrawAccountNumber').value = '';
+            document.getElementById('withdrawAmount').value = '';
+
+            updateDashboardUI();
+        }
+
+        function syncUserData() {
             let users = JSON.parse(localStorage.getItem('users')) || [];
             let idx = users.findIndex(u => u.email === currentUser.email);
             if(idx !== -1) {
                 users[idx].transactions = currentUser.transactions;
                 localStorage.setItem('users', JSON.stringify(users));
             }
-
-            // Clear inputs & update UI
-            document.getElementById('transDesc').value = '';
-            document.getElementById('transAmount').value = '';
-            updateDashboardUI();
         }
 
         function updateDashboardUI() {
@@ -771,6 +850,7 @@
 
             const titles = {
                 'dashboard': 'Dashboard Area',
+                'withdraw': 'Withdrawal Portal',
                 'analytics': 'Analytics & Reports',
                 'settings': 'Account Settings'
             };
