@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PulseDash - Real Financial Dashboard</title>
-    <!-- EmailJS SDK Include -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
@@ -23,7 +22,7 @@
             display: none !important;
         }
 
-        /* ================= 1. AUTHENTICATION PAGES ================= */
+        /* ================= AUTHENTICATION PAGES ================= */
         .auth-container {
             display: flex;
             justify-content: center;
@@ -108,14 +107,14 @@
             font-weight: bold;
         }
 
-        /* ================= POPUP MODAL ================= */
+        /* ================= POPUP MODALS ================= */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -124,25 +123,52 @@
 
         .modal-card {
             background: #ffffff;
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
             text-align: center;
-            max-width: 350px;
+            max-width: 380px;
             width: 90%;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        .modal-card h3 {
-            color: #2ecc71;
-            margin-bottom: 10px;
-            font-size: 22px;
+        /* Phone SMS Notification Style */
+        .sms-card {
+            background: #1e1e24;
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            border-left: 5px solid #2ecc71;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
-        .modal-card p {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 20px;
+        .sms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #a0a0a0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .sms-sender {
+            font-weight: bold;
+            color: #2ecc71;
+            font-size: 16px;
+        }
+
+        .sms-body {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+
+        .sms-body span {
+            font-weight: bold;
+            color: #fff;
         }
 
         @keyframes fadeIn {
@@ -150,7 +176,7 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* ================= 2. DASHBOARD LAYOUT ================= */
+        /* ================= DASHBOARD LAYOUT ================= */
         .dashboard-layout {
             display: flex;
             min-height: 100vh;
@@ -267,6 +293,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
         }
 
         table {
@@ -290,7 +317,7 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            max-width: 500px;
+            max-width: 600px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
@@ -312,18 +339,54 @@
             cursor: pointer;
         }
 
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-pending { background: #f39c12; color: white; }
+        .badge-success { background: #2ecc71; color: white; }
+        .badge-rejected { background: #e74c3c; color: white; }
+
+        .btn-action {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .btn-approve { background: #2ecc71; color: white; }
+        .btn-reject { background: #e74c3c; color: white; }
+
         .income-text { color: #2ecc71; font-weight: bold; }
         .expense-text { color: #e74c3c; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- ================= SUCCESS POPUP MODAL ================= -->
+    <!-- ================= SUCCESS REGISTRATION POPUP ================= -->
     <div id="successModal" class="modal-overlay hidden">
         <div class="modal-card">
-            <h3>🎉 Success!</h3>
-            <p>Your account has been created successfully!</p>
+            <h3 style="color: #2ecc71; margin-bottom: 10px;">🎉 Success!</h3>
+            <p style="color: #555; font-size: 15px; margin-bottom: 20px;">Your account has been created successfully!</p>
             <button class="btn-auth" onclick="closeModalAndRedirect()">Proceed to Login</button>
+        </div>
+    </div>
+
+    <!-- ================= SMS NOTIFICATION RECEIPT POPUP ================= -->
+    <div id="smsModal" class="modal-overlay hidden">
+        <div class="modal-card sms-card">
+            <div class="sms-header">
+                <span class="sms-sender" id="smsSenderCode">3737</span>
+                <span>Just Now</span>
+            </div>
+            <div class="sms-body" id="smsContent">
+                <!-- SMS Text populated via JavaScript -->
+            </div>
+            <button class="btn-auth" style="background: #2ecc71; margin-top: 15px;" onclick="closeSmsModal()">Dismiss</button>
         </div>
     </div>
 
@@ -350,7 +413,6 @@
                 <button type="submit" class="btn-auth" id="btnSendCode">Send Code via Email</button>
             </form>
 
-            <!-- Verification Code Section -->
             <form id="verifyForm" class="hidden" onsubmit="handleVerifyAndRegister(event)" style="margin-top: 15px;">
                 <div class="input-group">
                     <label>Enter Verification Code</label>
@@ -432,13 +494,12 @@
                     </div>
 
                     <div class="dashboard-sections">
-                        <!-- Real-time Transaction Form -->
                         <div class="transaction-form">
                             <h3>Add Transaction</h3>
                             <form onsubmit="handleAddTransaction(event)">
                                 <div class="input-group" style="margin-top: 10px;">
                                     <label>Description / Title</label>
-                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Deposit" required>
+                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Earning Deposit" required>
                                 </div>
                                 <div class="input-group">
                                     <label>Amount ($)</label>
@@ -456,7 +517,6 @@
                             </form>
                         </div>
 
-                        <!-- Real Recent Activity Table -->
                         <div class="table-container">
                             <h3>Recent Activity</h3>
                             <table>
@@ -468,9 +528,7 @@
                                         <th>Date</th>
                                     </tr>
                                 </thead>
-                                <tbody id="transactionList">
-                                    <!-- Dynamic rows will appear here -->
-                                </tbody>
+                                <tbody id="transactionList"></tbody>
                             </table>
                         </div>
                     </div>
@@ -478,31 +536,48 @@
 
                 <!-- TAB 2: WITHDRAW PAGE -->
                 <div id="tab-withdraw" class="tab-content hidden">
-                    <div class="settings-form" style="max-width: 600px;">
-                        <h3 style="margin-bottom: 15px;">Withdrawal Request</h3>
+                    <div class="settings-form">
+                        <h3 style="margin-bottom: 15px;">Withdrawal Portal</h3>
                         <div id="withdrawMsg" class="msg-box"></div>
                         
-                        <form onsubmit="handleWithdrawal(event)">
-                            <label>Payment Gateway / Bank</label>
+                        <form onsubmit="handleWithdrawalRequest(event)">
+                            <label>Payment Gateway</label>
                             <select id="withdrawGateway" required>
-                                <option value="" disabled selected>Select Payment Gateway</option>
-                                <option value="Easypaisa">Easypaisa</option>
-                                <option value="JazzCash">JazzCash</option>
-                                <option value="Bank Transfer">Bank Transfer (Meezan, HBL, Allied, etc.)</option>
-                                <option value="Crypto USDT">USDT / Crypto Wallet</option>
+                                <option value="" disabled selected>Select Gateway</option>
+                                <option value="Easypaisa">Easypaisa (Code: 3737)</option>
+                                <option value="JazzCash">JazzCash (Code: 8558)</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
                             </select>
 
                             <label>Account Holder Name</label>
-                            <input type="text" id="withdrawAccountName" placeholder="e.g. Alex Johnson" required>
+                            <input type="text" id="withdrawAccountName" placeholder="e.g. Muhammad Ali" required>
 
-                            <label>Account Number / Mobile / Address</label>
-                            <input type="text" id="withdrawAccountNumber" placeholder="03001234567 / Bank IBAN / Wallet Address" required>
+                            <label>Account / Mobile Number</label>
+                            <input type="text" id="withdrawAccountNumber" placeholder="03001234567" required>
 
                             <label>Withdrawal Amount ($)</label>
                             <input type="number" step="0.01" id="withdrawAmount" placeholder="0.00" required>
 
-                            <button type="submit" class="btn-save" style="background: #e74c3c;">Submit Withdrawal Request</button>
+                            <button type="submit" class="btn-save" style="background: #e74c3c;">Request Withdrawal</button>
                         </form>
+                    </div>
+
+                    <!-- Withdrawal History Table -->
+                    <div class="table-container" style="margin-top: 25px;">
+                        <h3>Your Withdrawal History</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Gateway</th>
+                                    <th>Account Name</th>
+                                    <th>Account / Mobile</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Admin Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawHistoryList"></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -522,63 +597,46 @@
                             <p id="analyticsMaxExpense" style="color: #e74c3c;">$0.00</p>
                         </div>
                     </div>
-
-                    <div class="table-container">
-                        <h3>Account Activity Summary</h3>
-                        <p style="margin-top: 10px; color: #555;">Real-time ledger report calculated based on your entries.</p>
-                    </div>
                 </div>
 
                 <!-- TAB 4: SETTINGS -->
                 <div id="tab-settings" class="tab-content hidden">
                     <div class="settings-form">
                         <h3 style="margin-bottom: 15px;">Profile Settings</h3>
-                        
                         <label>Display Name</label>
                         <input type="text" id="settingsName">
-
                         <label>Email Address</label>
                         <input type="email" id="settingsEmail">
-
                         <label>Change Password</label>
-                        <input type="password" id="settingsPassword" placeholder="Enter new password">
-
+                        <input type="password" id="settingsPassword">
                         <button class="btn-save" onclick="saveSettings()">Save Changes</button>
                     </div>
                 </div>
 
             </div>
-
         </div>
-
     </div>
 
-    <!-- JavaScript Logic -->
     <script>
-        // ================= EMAILJS INITIALIZATION =================
         const EMAILJS_PUBLIC_KEY = "_8HUQO20u9LLQS5Yj";
         const EMAILJS_SERVICE_ID = "service_wio8dnm";
         const EMAILJS_TEMPLATE_ID = "template_eloz01l";
 
-        // SDK Init
         emailjs.init(EMAILJS_PUBLIC_KEY); 
 
         let generatedOTP = null;
         let currentUser = null;
 
-        // Page view controller
         function showPage(pageId) {
             document.getElementById('signupPage').classList.add('hidden');
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboardPage').classList.add('hidden');
-            
             document.getElementById(pageId).classList.remove('hidden');
         }
 
-        // ================= SIGNUP & EMAIL VERIFICATION =================
+        // ================= SIGNUP & OTP =================
         function handleSendCode(event) {
             event.preventDefault();
-
             const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const errDiv = document.getElementById('signupError');
@@ -586,9 +644,8 @@
 
             let users = JSON.parse(localStorage.getItem('users')) || [];
             if (users.some(u => u.username === username || u.email === email)) {
-                errDiv.textContent = "This Username or Email is already registered!";
+                errDiv.textContent = "Username or Email already exists!";
                 errDiv.style.display = "block";
-                succDiv.style.display = "none";
                 return;
             }
 
@@ -605,14 +662,13 @@
                 passcode: generatedOTP
             })
             .then(() => {
-                succDiv.textContent = "A verification code has been sent to your email!";
+                succDiv.textContent = "Verification code sent to your email!";
                 succDiv.style.display = "block";
                 document.getElementById('verifyForm').classList.remove('hidden');
                 btn.classList.add('hidden');
             })
-            .catch((err) => {
-                console.error("EmailJS Error:", err);
-                errDiv.textContent = "Failed to send email! Please verify your details and try again.";
+            .catch(() => {
+                errDiv.textContent = "Failed to send code via EmailJS.";
                 errDiv.style.display = "block";
                 btn.textContent = "Send Code via Email";
                 btn.disabled = false;
@@ -621,7 +677,6 @@
 
         function handleVerifyAndRegister(event) {
             event.preventDefault();
-
             const enteredCode = document.getElementById('enteredCode').value.trim();
             const errDiv = document.getElementById('signupError');
 
@@ -636,10 +691,9 @@
             const password = document.getElementById('regPassword').value;
 
             let users = JSON.parse(localStorage.getItem('users')) || [];
-            users.push({ username, email, password, transactions: [] });
+            users.push({ username, email, password, transactions: [], withdrawals: [] });
             localStorage.setItem('users', JSON.stringify(users));
 
-            // Show Custom Modal
             document.getElementById('successModal').classList.remove('hidden');
         }
 
@@ -648,22 +702,25 @@
             showPage('loginPage');
         }
 
-        // ================= LOGIN SYSTEM =================
+        function closeSmsModal() {
+            document.getElementById('smsModal').classList.add('hidden');
+        }
+
+        // ================= LOGIN =================
         function handleLogin(event) {
             event.preventDefault();
-            
             const loginId = document.getElementById('loginId').value.trim();
             const pass = document.getElementById('loginPassword').value;
             const error = document.getElementById('loginError');
 
             let users = JSON.parse(localStorage.getItem('users')) || [];
-
             const user = users.find(u => (u.username === loginId || u.email === loginId) && u.password === pass);
 
             if (user) {
                 error.style.display = "none";
                 currentUser = user;
                 if(!currentUser.transactions) currentUser.transactions = [];
+                if(!currentUser.withdrawals) currentUser.withdrawals = [];
                 
                 showPage('dashboardPage');
                 document.getElementById('userNameDisplay').textContent = user.username;
@@ -673,36 +730,32 @@
                 document.getElementById('settingsPassword').value = user.password;
 
                 updateDashboardUI();
+                renderWithdrawalHistory();
                 switchTab('dashboard');
             } else {
-                error.textContent = "Invalid Username/Email or Password!";
+                error.textContent = "Invalid Login credentials!";
                 error.style.display = "block";
             }
         }
 
-        // ================= REAL TRANSACTION MANAGEMENT =================
+        // ================= TRANSACTIONS =================
         function handleAddTransaction(e) {
             e.preventDefault();
-            
             const desc = document.getElementById('transDesc').value.trim();
             const amount = parseFloat(document.getElementById('transAmount').value);
             const type = document.getElementById('transType').value;
             const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-            const newTrans = { desc, amount, type, date };
-            currentUser.transactions.unshift(newTrans);
-
-            // Sync with Local Storage
+            currentUser.transactions.unshift({ desc, amount, type, date });
             syncUserData();
 
-            // Clear inputs & update UI
             document.getElementById('transDesc').value = '';
             document.getElementById('transAmount').value = '';
             updateDashboardUI();
         }
 
         // ================= WITHDRAWAL SYSTEM =================
-        function handleWithdrawal(e) {
+        function handleWithdrawalRequest(e) {
             e.preventDefault();
             const gateway = document.getElementById('withdrawGateway').value;
             const accountName = document.getElementById('withdrawAccountName').value.trim();
@@ -710,40 +763,119 @@
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const msgBox = document.getElementById('withdrawMsg');
 
-            // Current Available Balance Calculation
-            let currentBalance = 0;
-            currentUser.transactions.forEach(t => {
-                if (t.type === 'income' || t.type === 'deposit') {
-                    currentBalance += t.amount;
-                } else {
-                    currentBalance -= t.amount;
-                }
-            });
+            let currentBalance = getAvailableBalance();
 
             if (amount > currentBalance) {
                 msgBox.className = "msg-box error-msg";
-                msgBox.textContent = "Insufficient funds! Your withdrawal amount exceeds available balance.";
+                msgBox.textContent = "Insufficient Balance!";
                 msgBox.style.display = "block";
                 return;
             }
 
-            const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-            const withdrawDesc = `Withdrawal (${gateway}) - ${accountName}`;
+            const id = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
+            const withdrawItem = { id, gateway, accountName, accountNumber, amount, status: 'Pending' };
 
-            const newTrans = { desc: withdrawDesc, amount, type: 'withdraw', date };
-            currentUser.transactions.unshift(newTrans);
-
+            currentUser.withdrawals.unshift(withdrawItem);
             syncUserData();
 
             msgBox.className = "msg-box success-msg";
-            msgBox.textContent = `Withdrawal request for $${amount.toFixed(2)} to ${gateway} submitted successfully!`;
+            msgBox.textContent = "Withdrawal request submitted! Status: Pending";
             msgBox.style.display = "block";
 
             document.getElementById('withdrawAccountName').value = '';
             document.getElementById('withdrawAccountNumber').value = '';
             document.getElementById('withdrawAmount').value = '';
 
+            renderWithdrawalHistory();
+        }
+
+        function processWithdrawalAction(index, action) {
+            const item = currentUser.withdrawals[index];
+
+            if (action === 'Approve') {
+                item.status = 'Success';
+                
+                // Add deduction entry to transactions
+                const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                currentUser.transactions.unshift({
+                    desc: `Withdrawal Approved (${item.gateway})`,
+                    amount: item.amount,
+                    type: 'withdraw',
+                    date: date
+                });
+
+                // Show Fake Official SMS Popup
+                showSMSNotification(item);
+
+            } else if (action === 'Reject') {
+                item.status = 'Rejected';
+            }
+
+            syncUserData();
             updateDashboardUI();
+            renderWithdrawalHistory();
+        }
+
+        function showSMSNotification(item) {
+            const senderCode = item.gateway === 'Easypaisa' ? '3737' : (item.gateway === 'JazzCash' ? '8558' : 'BANK-ALERT');
+            
+            document.getElementById('smsSenderCode').textContent = senderCode;
+            document.getElementById('smsContent').innerHTML = `
+                You have successfully received <span>Rs. ${(item.amount * 280).toFixed(2)}</span> (USD $${item.amount.toFixed(2)}) in your <span>${item.gateway}</span> Account <span>${item.accountNumber}</span>. <br><br>
+                <b>Account Title:</b> ${item.accountName}<br>
+                <b>Trx ID:</b> ${item.id}<br>
+                <b>Status:</b> Completed successfully.
+            `;
+
+            document.getElementById('smsModal').classList.remove('hidden');
+        }
+
+        function renderWithdrawalHistory() {
+            const tbody = document.getElementById('withdrawHistoryList');
+            tbody.innerHTML = '';
+
+            if (currentUser.withdrawals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #888;">No withdrawal history found.</td></tr>';
+                return;
+            }
+
+            currentUser.withdrawals.forEach((w, idx) => {
+                const tr = document.createElement('tr');
+                
+                let badgeClass = 'badge-pending';
+                if(w.status === 'Success') badgeClass = 'badge-success';
+                if(w.status === 'Rejected') badgeClass = 'badge-rejected';
+
+                let actionBtns = '-';
+                if(w.status === 'Pending') {
+                    actionBtns = `
+                        <button class="btn-action btn-approve" onclick="processWithdrawalAction(${idx}, 'Approve')">Approve</button>
+                        <button class="btn-action btn-reject" onclick="processWithdrawalAction(${idx}, 'Reject')">Reject</button>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td><b>${w.gateway}</b></td>
+                    <td>${w.accountName}</td>
+                    <td>${w.accountNumber}</td>
+                    <td>$${w.amount.toFixed(2)}</td>
+                    <td><span class="badge ${badgeClass}">${w.status}</span></td>
+                    <td>${actionBtns}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function getAvailableBalance() {
+            let balance = 0;
+            currentUser.transactions.forEach(t => {
+                if (t.type === 'income' || t.type === 'deposit') {
+                    balance += t.amount;
+                } else {
+                    balance -= t.amount;
+                }
+            });
+            return balance;
         }
 
         function syncUserData() {
@@ -751,26 +883,21 @@
             let idx = users.findIndex(u => u.email === currentUser.email);
             if(idx !== -1) {
                 users[idx].transactions = currentUser.transactions;
+                users[idx].withdrawals = currentUser.withdrawals;
                 localStorage.setItem('users', JSON.stringify(users));
             }
         }
 
         function updateDashboardUI() {
-            let balance = 0;
-            let income = 0;
-            let expense = 0;
-            let maxInc = 0;
-            let maxExp = 0;
-
+            let balance = 0, income = 0, expense = 0, maxInc = 0, maxExp = 0;
             const tbody = document.getElementById('transactionList');
             tbody.innerHTML = '';
 
             if (currentUser.transactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888;">No transactions found. Current balance is Zero.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888;">No activity found.</td></tr>';
             } else {
                 currentUser.transactions.forEach(t => {
                     const isCredit = (t.type === 'income' || t.type === 'deposit');
-                    
                     if (isCredit) {
                         income += t.amount;
                         balance += t.amount;
@@ -784,9 +911,7 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${t.desc}</td>
-                        <td class="${isCredit ? 'income-text' : 'expense-text'}">
-                            ${isCredit ? '+' : '-'}$${t.amount.toFixed(2)}
-                        </td>
+                        <td class="${isCredit ? 'income-text' : 'expense-text'}">${isCredit ? '+' : '-'}$${t.amount.toFixed(2)}</td>
                         <td style="text-transform: capitalize;">${t.type}</td>
                         <td>${t.date}</td>
                     `;
@@ -794,21 +919,17 @@
                 });
             }
 
-            // Update Cards
             document.getElementById('totalBalance').textContent = `$${balance.toFixed(2)}`;
             document.getElementById('totalIncome').textContent = `$${income.toFixed(2)}`;
             document.getElementById('totalExpense').textContent = `$${expense.toFixed(2)}`;
 
-            // Update Analytics
             document.getElementById('analyticsCount').textContent = currentUser.transactions.length;
             document.getElementById('analyticsMaxIncome').textContent = `$${maxInc.toFixed(2)}`;
             document.getElementById('analyticsMaxExpense').textContent = `$${maxExp.toFixed(2)}`;
         }
 
-        // ================= PROFILE & SETTINGS SAVE =================
         function saveSettings() {
             if (!currentUser) return;
-
             const newName = document.getElementById('settingsName').value.trim();
             const newEmail = document.getElementById('settingsEmail').value.trim();
             const newPass = document.getElementById('settingsPassword').value;
@@ -827,15 +948,13 @@
                 currentUser.password = newPass;
 
                 document.getElementById('userNameDisplay').textContent = newName;
-                alert('Profile updated successfully!');
+                alert('Settings updated!');
             }
         }
 
         function handleLogout() {
             currentUser = null;
             showPage('loginPage');
-            document.getElementById('loginId').value = '';
-            document.getElementById('loginPassword').value = '';
         }
 
         function switchTab(tabName) {
