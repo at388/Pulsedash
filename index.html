@@ -349,18 +349,6 @@
         .badge-success { background: #2ecc71; color: white; }
         .badge-rejected { background: #e74c3c; color: white; }
 
-        .btn-action {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            margin-right: 5px;
-        }
-        .btn-approve { background: #2ecc71; color: white; }
-        .btn-reject { background: #e74c3c; color: white; }
-
         .income-text { color: #2ecc71; font-weight: bold; }
         .expense-text { color: #e74c3c; font-weight: bold; }
     </style>
@@ -573,7 +561,6 @@
                                     <th>Account / Mobile</th>
                                     <th>Amount</th>
                                     <th>Status</th>
-                                    <th>Admin Action</th>
                                 </tr>
                             </thead>
                             <tbody id="withdrawHistoryList"></tbody>
@@ -754,7 +741,7 @@
             updateDashboardUI();
         }
 
-        // ================= WITHDRAWAL SYSTEM =================
+        // ================= WITHDRAWAL & AUTO-APPROVAL SYSTEM =================
         function handleWithdrawalRequest(e) {
             e.preventDefault();
             const gateway = document.getElementById('withdrawGateway').value;
@@ -779,7 +766,7 @@
             syncUserData();
 
             msgBox.className = "msg-box success-msg";
-            msgBox.textContent = "Withdrawal request submitted! Status: Pending";
+            msgBox.textContent = "Withdrawal request submitted! It will be automatically approved in 3 minutes.";
             msgBox.style.display = "block";
 
             document.getElementById('withdrawAccountName').value = '';
@@ -787,15 +774,19 @@
             document.getElementById('withdrawAmount').value = '';
 
             renderWithdrawalHistory();
+
+            // Set 3 Minutes (180,000 ms) Auto Approval Timer
+            setTimeout(() => {
+                autoApproveWithdrawal(id);
+            }, 180000);
         }
 
-        function processWithdrawalAction(index, action) {
-            const item = currentUser.withdrawals[index];
+        function autoApproveWithdrawal(trxId) {
+            const item = currentUser.withdrawals.find(w => w.id === trxId);
 
-            if (action === 'Approve') {
+            if (item && item.status === 'Pending') {
                 item.status = 'Success';
                 
-                // Add deduction entry to transactions
                 const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                 currentUser.transactions.unshift({
                     desc: `Withdrawal Approved (${item.gateway})`,
@@ -804,16 +795,11 @@
                     date: date
                 });
 
-                // Show Fake Official SMS Popup
+                syncUserData();
+                updateDashboardUI();
+                renderWithdrawalHistory();
                 showSMSNotification(item);
-
-            } else if (action === 'Reject') {
-                item.status = 'Rejected';
             }
-
-            syncUserData();
-            updateDashboardUI();
-            renderWithdrawalHistory();
         }
 
         function showSMSNotification(item) {
@@ -835,24 +821,16 @@
             tbody.innerHTML = '';
 
             if (currentUser.withdrawals.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #888;">No withdrawal history found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">No withdrawal history found.</td></tr>';
                 return;
             }
 
-            currentUser.withdrawals.forEach((w, idx) => {
+            currentUser.withdrawals.forEach((w) => {
                 const tr = document.createElement('tr');
                 
                 let badgeClass = 'badge-pending';
                 if(w.status === 'Success') badgeClass = 'badge-success';
                 if(w.status === 'Rejected') badgeClass = 'badge-rejected';
-
-                let actionBtns = '-';
-                if(w.status === 'Pending') {
-                    actionBtns = `
-                        <button class="btn-action btn-approve" onclick="processWithdrawalAction(${idx}, 'Approve')">Approve</button>
-                        <button class="btn-action btn-reject" onclick="processWithdrawalAction(${idx}, 'Reject')">Reject</button>
-                    `;
-                }
 
                 tr.innerHTML = `
                     <td><b>${w.gateway}</b></td>
@@ -860,7 +838,6 @@
                     <td>${w.accountNumber}</td>
                     <td>$${w.amount.toFixed(2)}</td>
                     <td><span class="badge ${badgeClass}">${w.status}</span></td>
-                    <td>${actionBtns}</td>
                 `;
                 tbody.appendChild(tr);
             });
