@@ -286,7 +286,7 @@
             <form id="signupForm" onsubmit="handleSendCode(event)">
                 <div class="input-group">
                     <label>Username</label>
-                    <input type="text" id="regUsername" placeholder="e.g. ahmed123" required>
+                    <input type="text" id="regUsername" placeholder="e.g. alex123" required>
                 </div>
                 <div class="input-group">
                     <label>Email Address</label>
@@ -296,20 +296,20 @@
                     <label>Password</label>
                     <input type="password" id="regPassword" placeholder="******" required>
                 </div>
-                <button type="submit" class="btn-auth" id="btnSendCode">Code Email Par Bhejein</button>
+                <button type="submit" class="btn-auth" id="btnSendCode">Send Code via Email</button>
             </form>
 
             <!-- Verification Code Section -->
             <form id="verifyForm" class="hidden" onsubmit="handleVerifyAndRegister(event)" style="margin-top: 15px;">
                 <div class="input-group">
-                    <label>Verification Code Enter Karein</label>
+                    <label>Enter Verification Code</label>
                     <input type="text" id="enteredCode" placeholder="6-digit code" required>
                 </div>
-                <button type="submit" class="btn-auth">Account Create Karein</button>
+                <button type="submit" class="btn-auth">Create Account</button>
             </form>
 
             <div class="auth-switch">
-                Pehle se account hai? <a href="#" onclick="showPage('loginPage')">Login karein</a>
+                Already have an account? <a href="#" onclick="showPage('loginPage')">Log in</a>
             </div>
         </div>
     </div>
@@ -322,18 +322,18 @@
             
             <form onsubmit="handleLogin(event)">
                 <div class="input-group">
-                    <label>Username ya Email</label>
+                    <label>Username or Email</label>
                     <input type="text" id="loginId" placeholder="Username or Email" required>
                 </div>
                 <div class="input-group">
                     <label>Password</label>
                     <input type="password" id="loginPassword" placeholder="******" required>
                 </div>
-                <button type="submit" class="btn-auth">Login Karein</button>
+                <button type="submit" class="btn-auth">Log In</button>
             </form>
 
             <div class="auth-switch">
-                Naya account banana hai? <a href="#" onclick="showPage('signupPage')">Sign Up karein</a>
+                Need a new account? <a href="#" onclick="showPage('signupPage')">Sign up</a>
             </div>
         </div>
     </div>
@@ -386,7 +386,7 @@
                             <form onsubmit="handleAddTransaction(event)">
                                 <div class="input-group" style="margin-top: 10px;">
                                     <label>Description / Title</label>
-                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Client Work, Bill" required>
+                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Client Project, Utility Bill" required>
                                 </div>
                                 <div class="input-group">
                                     <label>Amount ($)</label>
@@ -458,7 +458,7 @@
                         <input type="email" id="settingsEmail">
 
                         <label>Change Password</label>
-                        <input type="password" id="settingsPassword" placeholder="Naya password likhein">
+                        <input type="password" id="settingsPassword" placeholder="Enter new password">
 
                         <button class="btn-save" onclick="saveSettings()">Save Changes</button>
                     </div>
@@ -503,7 +503,7 @@
 
             let users = JSON.parse(localStorage.getItem('users')) || [];
             if (users.some(u => u.username === username || u.email === email)) {
-                errDiv.textContent = "Yeh Username ya Email pehle se registered hai!";
+                errDiv.textContent = "This Username or Email is already registered!";
                 errDiv.style.display = "block";
                 succDiv.style.display = "none";
                 return;
@@ -522,16 +522,16 @@
                 passcode: generatedOTP
             })
             .then(() => {
-                succDiv.textContent = "Code aapke email par bhej diya gaya hai!";
+                succDiv.textContent = "A verification code has been sent to your email!";
                 succDiv.style.display = "block";
                 document.getElementById('verifyForm').classList.remove('hidden');
                 btn.classList.add('hidden');
             })
             .catch((err) => {
                 console.error("EmailJS Error:", err);
-                errDiv.textContent = "Email bhejne me masla hua! Kripya details check karein.";
+                errDiv.textContent = "Failed to send email! Please verify your details and try again.";
                 errDiv.style.display = "block";
-                btn.textContent = "Code Email Par Bhejein";
+                btn.textContent = "Send Code via Email";
                 btn.disabled = false;
             });
         }
@@ -543,7 +543,7 @@
             const errDiv = document.getElementById('signupError');
 
             if (enteredCode !== generatedOTP) {
-                errDiv.textContent = "Galat verification code!";
+                errDiv.textContent = "Invalid verification code!";
                 errDiv.style.display = "block";
                 return;
             }
@@ -556,7 +556,7 @@
             users.push({ username, email, password, transactions: [] });
             localStorage.setItem('users', JSON.stringify(users));
 
-            alert("Account kamyabi se ban gaya hai! Ab login karein.");
+            alert("Account created successfully! Please log in.");
             location.reload();
         }
 
@@ -587,7 +587,7 @@
                 updateDashboardUI();
                 switchTab('dashboard');
             } else {
-                error.textContent = "Galat Username/Email ya Password!";
+                error.textContent = "Invalid Username/Email or Password!";
                 error.style.display = "block";
             }
         }
@@ -629,7 +629,7 @@
             tbody.innerHTML = '';
 
             if (currentUser.transactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888;">Koi transactions nahi hui hain. Balance Zero hai.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888;">No transactions found. Current balance is Zero.</td></tr>';
             } else {
                 currentUser.transactions.forEach(t => {
                     if (t.type === 'income') {
@@ -688,7 +688,7 @@
                 currentUser.password = newPass;
 
                 document.getElementById('userNameDisplay').textContent = newName;
-                alert('Profile kamyabi se update ho gayi!');
+                alert('Profile updated successfully!');
             }
         }
 
