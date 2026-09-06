@@ -108,6 +108,48 @@
             font-weight: bold;
         }
 
+        /* ================= POPUP MODAL ================= */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-card h3 {
+            color: #2ecc71;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .modal-card p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
         /* ================= 2. DASHBOARD LAYOUT ================= */
         .dashboard-layout {
             display: flex;
@@ -276,6 +318,15 @@
 </head>
 <body>
 
+    <!-- ================= SUCCESS POPUP MODAL ================= -->
+    <div id="successModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>🎉 Success!</h3>
+            <p>Your account has been created successfully!</p>
+            <button class="btn-auth" onclick="closeModalAndRedirect()">Proceed to Login</button>
+        </div>
+    </div>
+
     <!-- ================= 1. SIGNUP PAGE ================= -->
     <div id="signupPage" class="auth-container">
         <div class="auth-card">
@@ -386,7 +437,7 @@
                             <form onsubmit="handleAddTransaction(event)">
                                 <div class="input-group" style="margin-top: 10px;">
                                     <label>Description / Title</label>
-                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Client Project, Utility Bill" required>
+                                    <input type="text" id="transDesc" placeholder="e.g. Salary, Deposit, Withdrawal" required>
                                 </div>
                                 <div class="input-group">
                                     <label>Amount ($)</label>
@@ -396,7 +447,9 @@
                                     <label>Type</label>
                                     <select id="transType">
                                         <option value="income">Income (+)</option>
+                                        <option value="deposit">Deposit (+)</option>
                                         <option value="expense">Expense (-)</option>
+                                        <option value="withdraw">Withdrawal (-)</option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn-save" style="width: 100%; margin-top: 5px;">Add Entry</button>
@@ -556,8 +609,13 @@
             users.push({ username, email, password, transactions: [] });
             localStorage.setItem('users', JSON.stringify(users));
 
-            alert("Account created successfully! Please log in.");
-            location.reload();
+            // Show Custom Modal
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeModalAndRedirect() {
+            document.getElementById('successModal').classList.add('hidden');
+            showPage('loginPage');
         }
 
         // ================= LOGIN SYSTEM =================
@@ -632,7 +690,9 @@
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888;">No transactions found. Current balance is Zero.</td></tr>';
             } else {
                 currentUser.transactions.forEach(t => {
-                    if (t.type === 'income') {
+                    const isCredit = (t.type === 'income' || t.type === 'deposit');
+                    
+                    if (isCredit) {
                         income += t.amount;
                         balance += t.amount;
                         if(t.amount > maxInc) maxInc = t.amount;
@@ -645,8 +705,8 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${t.desc}</td>
-                        <td class="${t.type === 'income' ? 'income-text' : 'expense-text'}">
-                            ${t.type === 'income' ? '+' : '-'}$${t.amount.toFixed(2)}
+                        <td class="${isCredit ? 'income-text' : 'expense-text'}">
+                            ${isCredit ? '+' : '-'}$${t.amount.toFixed(2)}
                         </td>
                         <td style="text-transform: capitalize;">${t.type}</td>
                         <td>${t.date}</td>
