@@ -212,169 +212,168 @@
         }
         .btn-yt-sub:hover { background: #f3f4f6; transform: scale(1.05); }
 
-        /* NEW CUSTOM MINING UI STYLES BASED ON IMAGES */
-        .btc-header-badge {
-            background: #1a1d2e;
+        /* MODERN CRYPTO DASHBOARD STYLES */
+        .dashboard-modern {
+            background: #0d0f17;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* TOP STATUS BAR */
+        .top-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #181b29;
+            padding: 12px 20px;
+            border-radius: 30px;
+            margin-bottom: 25px;
             border: 1px solid #2a2e45;
-            border-radius: 25px;
-            padding: 8px 16px;
+        }
+
+        .btc-badge {
+            background: #252836;
+            padding: 6px 16px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .btc-icon {
-            background: #f7931a;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            gap: 8px;
             font-size: 14px;
-            margin-left: 8px;
+            font-weight: 600;
+            color: #f7931a;
         }
 
-        /* SPEEDOMETER / GAUGE CARD */
-        .speedometer-card {
-            background: #161926;
+        .speed-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-pill {
+            background: #3b2d54;
+            color: #bfa5f1;
+            border: none;
+            padding: 6px 14px;
             border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            border: 1px solid #2a2e45;
-            margin-bottom: 25px;
-            position: relative;
+            font-size: 12px;
+            cursor: pointer;
         }
 
-        .gauge-container {
-            position: relative;
+        /* GAUGE & SPEED DISPLAY */
+        .gauge-section {
+            background: #131622;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 1px solid #232738;
+        }
+
+        .speed-gauge-visual {
             width: 200px;
             height: 100px;
+            border-top-left-radius: 110px;
+            border-top-right-radius: 110px;
+            border: 12px solid #2a2a40;
+            border-bottom: 0;
             margin: 0 auto 15px auto;
-            overflow: hidden;
+            position: relative;
+            background: linear-gradient(180deg, rgba(147, 51, 234, 0.2) 0%, rgba(0,0,0,0) 100%);
         }
-        .gauge-bg {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: conic-gradient(from 270deg, #8b5cf6 0%, #3b82f6 50%, #1e293b 50%);
-            mask: radial-gradient(transparent 58%, #000 60%);
-            -webkit-mask: radial-gradient(transparent 58%, #000 60%);
-        }
-        .gauge-needle {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 4px;
-            height: 80px;
-            background: #ffffff;
-            transform-origin: bottom center;
-            transform: translateX(-50%) rotate(30deg);
-            border-radius: 4px;
-            transition: transform 0.5s ease;
-        }
-        .gauge-center {
+
+        .speed-gauge-visual::after {
+            content: '';
             position: absolute;
             bottom: -5px;
             left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 16px;
-            background: #ffffff;
-            border-radius: 50%;
+            width: 4px;
+            height: 65px;
+            background: #a855f7;
+            transform-origin: bottom center;
+            transform: rotate(25deg);
+            border-radius: 2px;
+            box-shadow: 0 0 10px #a855f7;
+            transition: transform 0.5s ease;
+            id: gaugeNeedle;
         }
 
-        .mining-speed-text {
-            font-size: 22px;
-            font-weight: bold;
+        .speed-readout {
+            margin-top: 10px;
+        }
+
+        .speed-val {
+            font-size: 28px;
+            font-weight: 800;
             color: #ffffff;
-            margin-top: 5px;
-        }
-        .mining-speed-label {
-            font-size: 11px;
-            color: #9ca3af;
-            letter-spacing: 1px;
-            text-transform: uppercase;
         }
 
-        .boost-banner {
-            background: #231b42;
-            border: 1px solid #6d28d9;
-            color: #d8b4fe;
-            padding: 10px 15px;
-            border-radius: 12px;
+        .boost-tag {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-size: 13px;
+            gap: 8px;
+            background: #211c38;
+            color: #a855f7;
+            padding: 8px 18px;
+            border-radius: 20px;
             margin-top: 15px;
-        }
-        .boost-icon {
-            background: #7c3aed;
-            color: white;
-            border-radius: 6px;
-            padding: 2px 6px;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #3b2d54;
         }
 
-        /* CONTRACT CARDS */
-        .section-title {
+        /* CONTRACT CARDS GRID */
+        .contracts-header {
             font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            color: #e5e7eb;
+            color: #9ca3af;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .contract-card {
-            background: #181528;
-            border: 1px solid #2e264f;
+            background: #181b29;
             border-radius: 14px;
             padding: 16px;
             margin-bottom: 12px;
-            position: relative;
-        }
-        .contract-card.highlight {
-            background: #25164d;
-            border-color: #7c3aed;
-            box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
-        }
-        .contract-header {
+            border: 1px solid #282c40;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+        }
+
+        .contract-card.active-highlight {
+            background: linear-gradient(135deg, #2a1b4e 0%, #181b29 100%);
+            border: 1px solid #7c3aed;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .contract-title {
             font-size: 13px;
             color: #9ca3af;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-        .contract-value {
-            font-size: 18px;
+
+        .contract-val {
+            font-size: 16px;
             font-weight: bold;
             color: #ffffff;
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 10px;
         }
-        .contract-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-        }
-        .status-active {
-            color: #10b981;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 600;
-        }
-        .dot-green {
+
+        .active-dot {
+            display: inline-block;
             width: 8px;
             height: 8px;
-            background: #10b981;
+            background-color: #22c55e;
             border-radius: 50%;
-            display: inline-block;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .hashrate-text {
+            font-size: 12px;
+            color: #6b7280;
         }
 
         /* STATS GRID */
@@ -542,66 +541,81 @@
                         <a href="https://www.youtube.com/@Gost_Bhai8" target="_blank" class="btn-yt-sub">Subscribe Now</a>
                     </div>
 
-                    <!-- TOTAL MINING BALANCE BAR -->
-                    <div class="btc-header-badge">
-                        <span style="font-size: 13px; color: #9ca3af;">Contract Balance</span>
-                        <div style="display: flex; align-items: center; font-family: monospace; font-size: 16px; font-weight: bold;">
-                            <span id="miningLiveVal">0.32529791</span> <span style="font-size: 12px; color: #f7931a; margin-left: 4px;">BTC</span>
-                            <span class="btc-icon">₿</span>
-                        </div>
-                    </div>
-
-                    <!-- SPEEDOMETER/GAUGE MINING PANEL -->
-                    <div class="speedometer-card">
-                        <div class="gauge-container">
-                            <div class="gauge-bg"></div>
-                            <div class="gauge-needle" id="gaugeNeedle"></div>
-                            <div class="gauge-center"></div>
-                        </div>
-
-                        <div class="mining-speed-label">MINING SPEED</div>
-                        <div class="mining-speed-text"><span id="speedValue">784.51</span> KH/s</div>
-
-                        <div>
-                            <div class="boost-banner">
-                                <span class="boost-icon">⚡</span>
-                                <span>Nitro Boost is active</span>
+                    <div class="dashboard-modern">
+                        
+                        <!-- TOP BTC BAR -->
+                        <div class="top-status-bar">
+                            <span style="color: #9ca3af; font-size: 13px;">Contracts</span>
+                            <div class="btc-badge">
+                                <span>₿</span>
+                                <span id="miningLiveVal">0.325297912548</span> BTC
+                            </div>
+                            <div class="speed-controls">
+                                <button class="btn-pill">Filter</button>
+                                <button class="btn-pill">Sort</button>
                             </div>
                         </div>
 
-                        <div style="margin-top: 15px; font-size: 13px; color: #9ca3af; font-family: monospace;">
-                            <span class="btc-icon" style="width: 18px; height: 18px; font-size: 11px;">₿</span> 
-                            <span id="liveBtcAmount">0.00935300</span> BTC
+                        <!-- SPEEDOMETER METER SECTION -->
+                        <div class="gauge-section">
+                            <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">MINING SPEED METER</p>
+                            <div class="speed-gauge-visual"></div>
+                            <div class="speed-readout">
+                                <div class="speed-val">784,51 <span style="font-size: 16px; color: #a855f7;">KH/s</span></div>
+                            </div>
+                            <div class="boost-tag">
+                                ⚡ Nitro Boost is active
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- MINING CONTRACTS SECTION -->
-                    <div class="section-title">Active Mining Contracts</div>
+                        <!-- CONTRACTS LIST SECTION -->
+                        <div class="contracts-header">Active Hashrate Contracts</div>
 
-                    <div class="contract-card highlight">
-                        <div class="contract-header">
-                            <span>Tier 24 Contract</span>
-                            <span>⚡ 36.58 Th/s</span>
+                        <!-- Contract 1 -->
+                        <div class="contract-card">
+                            <div>
+                                <div class="contract-title">Tier 23 Contract</div>
+                                <div class="contract-val">
+                                    <span style="color: #f7931a;">₿</span> + 0.000005170186 btc
+                                </div>
+                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                    <span class="active-dot"></span>
+                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
+                                </div>
+                            </div>
+                            <div class="hashrate-text">⚡ 29.97 Th/s</div>
                         </div>
-                        <div class="contract-value">
-                            <span class="btc-icon">₿</span> + 0.000005068481 btc
-                        </div>
-                        <div class="contract-footer">
-                            <span class="status-active"><span class="dot-green"></span> ACTIVE</span>
-                        </div>
-                    </div>
 
-                    <div class="contract-card">
-                        <div class="contract-header">
-                            <span>Tier 23 Contract</span>
-                            <span>⚡ 29.97 Th/s</span>
+                        <!-- Contract 2 (Highlighted) -->
+                        <div class="contract-card active-highlight">
+                            <div>
+                                <div class="contract-title">Tier 24 Contract</div>
+                                <div class="contract-val">
+                                    <span style="color: #f7931a;">₿</span> + 0.000005068481 btc
+                                </div>
+                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                    <span class="active-dot"></span>
+                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
+                                </div>
+                            </div>
+                            <div class="hashrate-text">⚡ 45.20 Th/s</div>
                         </div>
-                        <div class="contract-value">
-                            <span class="btc-icon">₿</span> + 0.000005170186 btc
+
+                        <!-- Contract 3 -->
+                        <div class="contract-card">
+                            <div>
+                                <div class="contract-title">Tier 25 Contract</div>
+                                <div class="contract-val">
+                                    <span style="color: #f7931a;">₿</span> + 0.000006310837 btc
+                                </div>
+                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                    <span class="active-dot"></span>
+                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
+                                </div>
+                            </div>
+                            <div class="hashrate-text">⚡ 36.58 Th/s</div>
                         </div>
-                        <div class="contract-footer">
-                            <span class="status-active"><span class="dot-green"></span> ACTIVE</span>
-                        </div>
+
                     </div>
 
                     <!-- STATS GRID -->
@@ -766,25 +780,19 @@
 
     <script>
         // JS LOGIC & DYNAMIC GAUGE ANIMATION
-        let btcVal = 0.00935300;
-        let mainVal = 0.32529791;
+        let mainVal = 0.325297912548;
 
         setInterval(() => {
-            btcVal += 0.00000005;
-            mainVal += 0.00000005;
+            mainVal += 0.000000000005;
             
-            const btcElem = document.getElementById("liveBtcAmount");
             const mainElem = document.getElementById("miningLiveVal");
-            
-            if (btcElem) btcElem.innerText = btcVal.toFixed(8);
-            if (mainElem) mainElem.innerText = mainVal.toFixed(8);
+            if (mainElem) mainElem.innerText = mainVal.toFixed(12);
 
             // Needle oscillation simulation
-            const needle = document.getElementById("gaugeNeedle");
-            if (needle) {
-                const randomAngle = Math.floor(Math.random() * 40) - 20; // -20deg to 20deg
-                needle.style.transform = `translateX(-50%) rotate(${randomAngle}deg)`;
-            }
+            const style = document.createElement('style');
+            const randomAngle = Math.floor(Math.random() * 40) - 20; // -20deg to 20deg
+            style.innerHTML = `.speed-gauge-visual::after { transform: rotate(${randomAngle}deg); }`;
+            document.head.appendChild(style);
         }, 2000);
 
         function showPage(pageId) {
