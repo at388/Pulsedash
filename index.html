@@ -221,17 +221,25 @@
         /* PLAN CARDS GRID */
         .plans-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px; margin-bottom: 25px;
         }
 
         .plan-card {
             background: #181b29; border: 1px solid #2a2e45;
-            padding: 15px; border-radius: 12px; text-align: center;
+            padding: 20px; border-radius: 12px; text-align: center;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-        .plan-card h4 { color: #a78bfa; margin-bottom: 6px; }
-        .plan-price { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
-        .plan-speed { font-size: 12px; color: #10b981; font-weight: 600; }
+        .plan-card h4 { color: #a78bfa; margin-bottom: 6px; font-size: 16px; }
+        .plan-price { font-size: 22px; font-weight: bold; margin-bottom: 6px; color: #fff; }
+        .plan-speed { font-size: 13px; color: #10b981; font-weight: 600; margin-bottom: 15px; }
+        
+        .btn-buy-plan {
+            background: #8b5cf6; color: white; border: none;
+            padding: 10px; border-radius: 8px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-buy-plan:hover { background: #7c3aed; }
 
         /* STATS GRID */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
@@ -321,6 +329,22 @@
                 <div id="tab-dashboard" class="tab-content">
                     <div class="dashboard-modern">
                         
+                        <!-- BALANCE CARDS FIRST -->
+                        <div class="cards-grid">
+                            <div class="card" style="border: 1px solid #10b981; background: rgba(16, 185, 129, 0.05);">
+                                <h4>Main Wallet Balance ($)</h4>
+                                <p id="totalBalance" style="color: #10b981; font-size: 24px;">$0.00</p>
+                            </div>
+                            <div class="card">
+                                <h4>Total Claimed Earnings ($)</h4>
+                                <p id="totalMined" style="color: #3b82f6;">$0.00</p>
+                            </div>
+                            <div class="card">
+                                <h4>Total Withdrawn ($)</h4>
+                                <p id="totalWithdrawn" style="color: #ef4444;">$0.00</p>
+                            </div>
+                        </div>
+
                         <!-- LIVE MINING BTC COUNTER -->
                         <div class="top-status-bar">
                             <span style="color: #9ca3af; font-size: 13px;">Unclaimed Mined BTC</span>
@@ -349,7 +373,7 @@
                         <!-- QUICK DEPOSIT BOX UNDER MINING -->
                         <div class="quick-deposit-box">
                             <div class="quick-deposit-header">
-                                <h3>💳 Quick Deposit (Buy Mining Speed)</h3>
+                                <h3>💳 Quick Deposit</h3>
                                 <span>Min Deposit: $10.00</span>
                             </div>
                             <form onsubmit="handleQuickDeposit(event)">
@@ -360,19 +384,32 @@
                             </form>
                         </div>
 
-                        <!-- BALANCE CARDS -->
-                        <div class="cards-grid">
-                            <div class="card">
-                                <h4>Main Wallet Balance ($)</h4>
-                                <p id="totalBalance">$0.00</p>
+                        <!-- SELECT MINING PLAN FROM DASHBOARD -->
+                        <h3 style="margin-bottom: 15px; color: #fff;">Select Mining Plan (Buy Hashrate)</h3>
+                        <div class="plans-grid">
+                            <div class="plan-card">
+                                <div>
+                                    <h4>Starter Plan</h4>
+                                    <div class="plan-price">$10.00</div>
+                                    <div class="plan-speed">+ 250 KH/s Speed</div>
+                                </div>
+                                <button class="btn-buy-plan" onclick="buyMiningPlan(10, 250)">Activate Plan</button>
                             </div>
-                            <div class="card">
-                                <h4>Total Claimed Earnings ($)</h4>
-                                <p id="totalMined" style="color: #10b981;">$0.00</p>
+                            <div class="plan-card">
+                                <div>
+                                    <h4>Pro Plan</h4>
+                                    <div class="plan-price">$50.00</div>
+                                    <div class="plan-speed">+ 1,500 KH/s Speed</div>
+                                </div>
+                                <button class="btn-buy-plan" onclick="buyMiningPlan(50, 1500)">Activate Plan</button>
                             </div>
-                            <div class="card">
-                                <h4>Total Withdrawn ($)</h4>
-                                <p id="totalWithdrawn" style="color: #ef4444;">$0.00</p>
+                            <div class="plan-card">
+                                <div>
+                                    <h4>Ultra Plan</h4>
+                                    <div class="plan-price">$100.00</div>
+                                    <div class="plan-speed">+ 3,500 KH/s Speed</div>
+                                </div>
+                                <button class="btn-buy-plan" onclick="buyMiningPlan(100, 3500)">Activate Plan</button>
                             </div>
                         </div>
 
@@ -382,26 +419,6 @@
                 <!-- TAB 2: DEPOSIT -->
                 <div id="tab-deposit" class="tab-content hidden">
                     
-                    <!-- PLAN SELECTION -->
-                    <h3 style="margin-bottom: 12px;">Mining Hashrate Plans</h3>
-                    <div class="plans-grid">
-                        <div class="plan-card">
-                            <h4>Starter Plan</h4>
-                            <div class="plan-price">$10.00</div>
-                            <div class="plan-speed">+ 250 KH/s Speed</div>
-                        </div>
-                        <div class="plan-card">
-                            <h4>Pro Plan</h4>
-                            <div class="plan-price">$50.00</div>
-                            <div class="plan-speed">+ 1,500 KH/s Speed</div>
-                        </div>
-                        <div class="plan-card">
-                            <h4>Ultra Plan</h4>
-                            <div class="plan-price">$100.00</div>
-                            <div class="plan-speed">+ 3,500 KH/s Speed</div>
-                        </div>
-                    </div>
-
                     <div style="background: #161926; padding: 25px; border-radius: 14px; border: 1px solid #2a2e45;">
                         <h3 style="margin-bottom: 10px;">Deposit Money (USD)</h3>
                         <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Min Deposit: <b>$10.00</b></p>
@@ -567,7 +584,7 @@
             showPage('loginPage');
         }
 
-        /* QUICK DEPOSIT REDIRECT & CHECK */
+        /* QUICK DEPOSIT REDIRECT */
         function handleQuickDeposit(e) {
             e.preventDefault();
             const amount = parseFloat(document.getElementById('quickDepositAmount').value);
@@ -604,10 +621,10 @@
             localStorage.setItem('deposits', JSON.stringify(depositHistory));
             renderDepositHistory();
 
-            alert("Your payment is being verified. It will take up to 30 minutes to reflect in your account.");
+            alert("Deposit request submitted! Verification takes up to 3 minutes.");
             e.target.reset();
 
-            // Auto-Approved Backend Simulation after 3 Minutes
+            // Auto-Approval Simulation (3 Minutes)
             setTimeout(() => {
                 const item = depositHistory.find(d => d.id === newDeposit.id);
                 if (item && item.status === 'Pending') {
@@ -615,19 +632,34 @@
                     localStorage.setItem('deposits', JSON.stringify(depositHistory));
                     renderDepositHistory();
 
-                    activateMiningEngine(parseFloat(amount));
+                    // ADD DEPOSIT AMOUNT DIRECTLY TO MAIN BALANCE
+                    userBalanceUSD += parseFloat(amount);
+                    document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
+
+                    alert(`🎉 Deposit Approved! $${amount} has been added to your Main Wallet Balance. You can now select a Plan from the Dashboard.`);
                 }
             }, 180000); 
         }
 
-        function activateMiningEngine(amountUSD) {
+        /* BUY MINING PLAN FROM DASHBOARD BALANCE */
+        function buyMiningPlan(cost, speed) {
+            if (userBalanceUSD < cost) {
+                alert(`❌ Insufficient Balance! You need $${cost}.00 in your Main Balance to activate this plan. Please deposit funds first.`);
+                return;
+            }
+
+            // Deduct cost from Main Balance
+            userBalanceUSD -= cost;
+            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
+
+            // Activate Speedometer
             activeMining = true;
-            miningSpeedKH = (amountUSD / 10) * 250;
-            
+            miningSpeedKH += speed;
+
             document.getElementById('speedValText').innerText = miningSpeedKH.toFixed(2);
             document.getElementById('speedNeedle').classList.add('active');
-            
-            alert(`🎉 Payment Verified! $${amountUSD} plan activated with ${miningSpeedKH} KH/s Mining Speed!`);
+
+            alert(`🚀 Plan Activated Successfully! $${cost} deducted from Main Balance. Mining speed increased to ${miningSpeedKH} KH/s.`);
         }
 
         function renderDepositHistory() {
@@ -701,9 +733,8 @@
             const num = document.getElementById('withdrawNum').value;
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
 
-            // BALANCE VALIDATION CHECK
             if (userBalanceUSD <= 0 || amount > userBalanceUSD) {
-                alert("❌ Transaction Failed! Insufficient wallet balance. Please claim your mining earnings or make a deposit first.");
+                alert("❌ Transaction Failed! Insufficient main balance.");
                 return;
             }
 
@@ -724,7 +755,7 @@
             localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
             renderWithdrawHistory();
 
-            alert("Withdrawal request submitted! Processing soon.");
+            alert("Withdrawal request submitted!");
             e.target.reset();
 
             setTimeout(() => {
