@@ -130,7 +130,7 @@
             padding: 25px;
             border-radius: 16px;
             text-align: center;
-            max-width: 380px;
+            max-width: 400px;
             width: 90%;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid #2a2e45;
@@ -429,6 +429,52 @@
         .settings-form { background: #161926; padding: 25px; border-radius: 14px; max-width: 500px; border: 1px solid #2a2e45; }
         .settings-form input, .settings-form select { width: 100%; padding: 10px; margin: 6px 0 16px 0; background: #0d0f17; border: 1px solid #2a2e45; color: white; border-radius: 6px; }
         .btn-save { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        /* STATUS BADGES & RECEIPT BUTTON */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+        .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+        
+        .btn-receipt {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 4px;
+            display: inline-block;
+            font-weight: bold;
+        }
+        .btn-receipt:hover { background: #2563eb; }
+
+        /* RECEIPT CARD MODAL STYLING */
+        .receipt-box {
+            text-align: left;
+            background: #0d0f17;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px dashed #3b82f6;
+            margin-top: 15px;
+            color: #fff;
+            font-size: 13px;
+        }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #1f2333;
+            padding-bottom: 6px;
+        }
+        .receipt-row span { color: #9ca3af; }
+        .receipt-row strong { color: #fff; }
     </style>
 </head>
 <body>
@@ -439,6 +485,20 @@
             <h3 style="color: #10b981; margin-bottom: 10px;">🎉 Welcome Bonus Claimed!</h3>
             <p style="color: #9ca3af; font-size: 14px; margin-bottom: 20px;">Account created! $10 Welcome Bonus added to your account.</p>
             <button class="btn-auth" onclick="closeModalAndRedirect()">Proceed to Login</button>
+        </div>
+    </div>
+
+    <!-- WITHDRAW RECEIPT MODAL -->
+    <div id="receiptModal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 420px;">
+            <h3 style="color: #10b981; margin-bottom: 5px;">✅ Withdrawal Receipt</h3>
+            <p style="color: #9ca3af; font-size: 12px;">Transaction Completed Successfully</p>
+            
+            <div class="receipt-box" id="receiptContent">
+                <!-- Receipt details populated via JS -->
+            </div>
+
+            <button class="btn-auth" style="margin-top: 15px;" onclick="closeReceiptModal()">Close Receipt</button>
         </div>
     </div>
 
@@ -742,7 +802,7 @@
                                     <th>Account Title</th>
                                     <th>Account Num</th>
                                     <th>Amount ($)</th>
-                                    <th>Status</th>
+                                    <th>Status / Action</th>
                                 </tr>
                             </thead>
                             <tbody id="withdrawHistoryBody">
@@ -774,6 +834,7 @@
 
     <script>
         let mainVal = 0.325297912548;
+        let withdrawalHistory = JSON.parse(localStorage.getItem('withdrawals')) || [];
 
         // Page Load hone par state checking
         window.addEventListener('DOMContentLoaded', () => {
@@ -785,6 +846,7 @@
                 document.getElementById('userNameDisplay').innerText = currentUser || 'Miner';
                 showPage('dashboardPage');
                 switchTab(activeTab);
+                renderWithdrawHistory();
             } else {
                 showPage('signupPage');
             }
@@ -808,7 +870,6 @@
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
             document.getElementById(`menu-${tabName}`).classList.add('active');
             
-            // Active tab ko save kar rahe hain
             localStorage.setItem('activeTab', tabName);
 
             const titles = {
@@ -840,17 +901,16 @@
             e.preventDefault();
             const username = document.getElementById('loginId').value || 'Miner';
             
-            // Login Session State Saved
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('currentUser', username);
             
             document.getElementById('userNameDisplay').innerText = username;
             showPage('dashboardPage');
             switchTab('dashboard');
+            renderWithdrawHistory();
         }
 
         function handleLogout() {
-            // Logout par session clear karna
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('currentUser');
             localStorage.removeItem('activeTab');
@@ -883,9 +943,100 @@
             alert("Deposit request submitted successfully!");
         }
 
+        /* WITHDRAWAL PROCESS & HISTORY HANDLER */
         function handleWithdrawRequest(e) {
             e.preventDefault();
-            alert("Withdrawal request submitted successfully!");
+            
+            const gateway = document.getElementById('withdrawGateway').value;
+            const num = document.getElementById('withdrawNum').value;
+            const title = document.getElementById('withdrawTitle').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value).toFixed(2);
+            
+            const trxId = 'WD-' + Math.floor(10000000 + Math.random() * 90000000);
+            const dateStr = new Date().toLocaleString();
+
+            const newWithdrawal = {
+                id: Date.now(),
+                trxId: trxId,
+                gateway: gateway,
+                num: num,
+                title: title,
+                amount: amount,
+                status: 'Pending',
+                date: dateStr
+            };
+
+            withdrawalHistory.unshift(newWithdrawal);
+            localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
+            renderWithdrawHistory();
+
+            alert("Withdrawal request submitted successfully! Pending approval.");
+            e.target.reset();
+
+            // Auto Approve Simulation (3 Seconds delay)
+            setTimeout(() => {
+                const item = withdrawalHistory.find(w => w.id === newWithdrawal.id);
+                if (item) {
+                    item.status = 'Approved';
+                    localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
+                    renderWithdrawHistory();
+                }
+            }, 3000);
+        }
+
+        function renderWithdrawHistory() {
+            const tbody = document.getElementById('withdrawHistoryBody');
+            tbody.innerHTML = '';
+
+            if (withdrawalHistory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>';
+                return;
+            }
+
+            withdrawalHistory.forEach(item => {
+                const tr = document.createElement('tr');
+                let statusHtml = '';
+
+                if (item.status === 'Pending') {
+                    statusHtml = `<span class="status-badge status-pending">Pending</span>`;
+                } else {
+                    statusHtml = `
+                        <span class="status-badge status-approved">Approved</span><br>
+                        <button class="btn-receipt" onclick="viewReceipt(${item.id})">🧾 View Receipt</button>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td>${item.gateway}</td>
+                    <td>${item.title}</td>
+                    <td>${item.num}</td>
+                    <td style="color:#10b981; font-weight:bold;">$${item.amount}</td>
+                    <td>${statusHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewReceipt(id) {
+            const item = withdrawalHistory.find(w => w.id === id);
+            if (!item) return;
+
+            const content = document.getElementById('receiptContent');
+            content.innerHTML = `
+                <div class="receipt-row"><span>Status:</span> <strong style="color:#10b981;">${item.status}</strong></div>
+                <div class="receipt-row"><span>TRX ID:</span> <strong>${item.trxId}</strong></div>
+                <div class="receipt-row"><span>Gateway:</span> <strong>${item.gateway}</strong></div>
+                <div class="receipt-row"><span>Account Name:</span> <strong>${item.title}</strong></div>
+                <div class="receipt-row"><span>Account Number:</span> <strong>${item.num}</strong></div>
+                <div class="receipt-row"><span>Amount Withdrawn:</span> <strong style="color:#10b981;">$${item.amount} USD</strong></div>
+                <div class="receipt-row"><span>Date & Time:</span> <strong>${item.date}</strong></div>
+            `;
+
+            document.getElementById('receiptModal').classList.remove('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.add('hidden');
         }
 
         function handleUpdateSettings(e) {
