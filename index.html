@@ -136,28 +136,6 @@
             border: 1px solid #2a2e45;
         }
 
-        .sms-card {
-            background: #1f2937;
-            color: #ffffff;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: left;
-            border-left: 5px solid #10b981;
-        }
-
-        .sms-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #374151;
-            padding-bottom: 6px;
-        }
-
-        .sms-sender { font-weight: bold; color: #10b981; font-size: 15px; }
-        .sms-body { font-size: 13px; line-height: 1.5; color: #e5e7eb; }
-
         /* DASHBOARD LAYOUT */
         .dashboard-layout { display: flex; min-height: 100vh; }
         .sidebar { width: 250px; background: #12141d; color: white; padding: 20px; border-right: 1px solid #1f2333; }
@@ -218,10 +196,8 @@
             color: #ffffff;
             padding: 20px;
             border-radius: 16px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* TOP STATUS BAR */
         .top-status-bar {
             display: flex;
             justify-content: space-between;
@@ -243,21 +219,6 @@
             font-size: 14px;
             font-weight: 600;
             color: #f7931a;
-        }
-
-        .speed-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-pill {
-            background: #3b2d54;
-            color: #bfa5f1;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
         }
 
         /* GAUGE & SPEED DISPLAY */
@@ -295,11 +256,6 @@
             border-radius: 2px;
             box-shadow: 0 0 10px #a855f7;
             transition: transform 0.5s ease;
-            id: gaugeNeedle;
-        }
-
-        .speed-readout {
-            margin-top: 10px;
         }
 
         .speed-val {
@@ -320,6 +276,66 @@
             font-size: 13px;
             font-weight: 600;
             border: 1px solid #3b2d54;
+        }
+
+        /* QUICK DEPOSIT BOX UNDER MINING */
+        .quick-deposit-box {
+            background: linear-gradient(135deg, #181b29, #131622);
+            border: 1px solid #3b82f6;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .quick-deposit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quick-deposit-header h3 {
+            font-size: 16px;
+            color: #3b82f6;
+        }
+
+        .quick-deposit-header span {
+            font-size: 12px;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .deposit-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .deposit-input-wrapper input {
+            flex: 1;
+            padding: 12px;
+            background: #0d0f17;
+            border: 1px solid #2a2e45;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .btn-quick-deposit {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-quick-deposit:hover {
+            background: #059669;
         }
 
         /* CONTRACT CARDS GRID */
@@ -413,10 +429,6 @@
         .settings-form { background: #161926; padding: 25px; border-radius: 14px; max-width: 500px; border: 1px solid #2a2e45; }
         .settings-form input, .settings-form select { width: 100%; padding: 10px; margin: 6px 0 16px 0; background: #0d0f17; border: 1px solid #2a2e45; color: white; border-radius: 6px; }
         .btn-save { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .badge-pending { background: #d97706; color: white; }
-        .badge-success { background: #10b981; color: white; }
     </style>
 </head>
 <body>
@@ -427,18 +439,6 @@
             <h3 style="color: #10b981; margin-bottom: 10px;">🎉 Welcome Bonus Claimed!</h3>
             <p style="color: #9ca3af; font-size: 14px; margin-bottom: 20px;">Account created! $10 Welcome Bonus added to your account.</p>
             <button class="btn-auth" onclick="closeModalAndRedirect()">Proceed to Login</button>
-        </div>
-    </div>
-
-    <!-- SMS NOTIFICATION MODAL -->
-    <div id="smsModal" class="modal-overlay hidden">
-        <div class="modal-card sms-card">
-            <div class="sms-header">
-                <span class="sms-sender" id="smsSenderCode">3737</span>
-                <span>Just Now</span>
-            </div>
-            <div class="sms-body" id="smsContent"></div>
-            <button class="btn-auth" style="background: #10b981; margin-top: 15px;" onclick="closeSmsModal()">Dismiss</button>
         </div>
     </div>
 
@@ -511,8 +511,8 @@
             <h3>⚡ CT POOL</h3>
             <ul>
                 <li id="menu-dashboard" class="active" onclick="switchTab('dashboard')">🏠 Mining Dashboard</li>
-                <li id="menu-deposit" onclick="switchTab('deposit')">📥 Deposit</li>
-                <li id="menu-withdraw" onclick="switchTab('withdraw')">📤 Withdraw</li>
+                <li id="menu-deposit" onclick="switchTab('deposit')">📥 Deposit ($)</li>
+                <li id="menu-withdraw" onclick="switchTab('withdraw')">📤 Withdraw ($)</li>
                 <li id="menu-settings" onclick="switchTab('settings')">⚙️ Settings</li>
             </ul>
         </div>
@@ -532,7 +532,7 @@
                 <!-- TAB 1: DASHBOARD -->
                 <div id="tab-dashboard" class="tab-content">
                     
-                    <!-- YOUTUBE SUBSCRIBE CARD -->
+                    <!-- YOUTUBE SUBSCRIBE SPECIAL CARD -->
                     <div class="yt-subscribe-card">
                         <div class="yt-info">
                             <h3>📌 Subscribe YouTube Channel</h3>
@@ -545,335 +545,34 @@
                         
                         <!-- TOP BTC BAR -->
                         <div class="top-status-bar">
-                            <span style="color: #9ca3af; font-size: 13px;">Contracts</span>
+                            <span style="color: #9ca3af; font-size: 13px;">Live BTC Mined</span>
                             <div class="btc-badge">
                                 <span>₿</span>
                                 <span id="miningLiveVal">0.325297912548</span> BTC
-                            </div>
-                            <div class="speed-controls">
-                                <button class="btn-pill">Filter</button>
-                                <button class="btn-pill">Sort</button>
                             </div>
                         </div>
 
                         <!-- SPEEDOMETER METER SECTION -->
                         <div class="gauge-section">
-                            <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">MINING SPEED METER</p>
+                            <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">BTC MINING SPEED METER</p>
                             <div class="speed-gauge-visual"></div>
                             <div class="speed-readout">
                                 <div class="speed-val">784,51 <span style="font-size: 16px; color: #a855f7;">KH/s</span></div>
                             </div>
                             <div class="boost-tag">
-                                ⚡ Nitro Boost is active
+                                ⚡ Nitro Boost Active
                             </div>
                         </div>
 
-                        <!-- CONTRACTS LIST SECTION -->
-                        <div class="contracts-header">Active Hashrate Contracts</div>
-
-                        <!-- Contract 1 -->
-                        <div class="contract-card">
-                            <div>
-                                <div class="contract-title">Tier 23 Contract</div>
-                                <div class="contract-val">
-                                    <span style="color: #f7931a;">₿</span> + 0.000005170186 btc
+                        <!-- QUICK DEPOSIT BOX UNDER MINING -->
+                        <div class="quick-deposit-box">
+                            <div class="quick-deposit-header">
+                                <h3>💳 Quick Deposit (Investment)</h3>
+                                <span>Minimum Deposit: $5.00</span>
+                            </div>
+                            <form onsubmit="handleQuickDeposit(event)">
+                                <div class="deposit-input-wrapper">
+                                    <input type="number" id="quickDepositAmount" placeholder="Enter Dollars ($) e.g. 5, 10, 50" min="5" step="1" required>
+                                    <button type="submit" class="btn-quick-deposit">Deposit Dollars</button>
                                 </div>
-                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-                                    <span class="active-dot"></span>
-                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
-                                </div>
-                            </div>
-                            <div class="hashrate-text">⚡ 29.97 Th/s</div>
-                        </div>
-
-                        <!-- Contract 2 (Highlighted) -->
-                        <div class="contract-card active-highlight">
-                            <div>
-                                <div class="contract-title">Tier 24 Contract</div>
-                                <div class="contract-val">
-                                    <span style="color: #f7931a;">₿</span> + 0.000005068481 btc
-                                </div>
-                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-                                    <span class="active-dot"></span>
-                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
-                                </div>
-                            </div>
-                            <div class="hashrate-text">⚡ 45.20 Th/s</div>
-                        </div>
-
-                        <!-- Contract 3 -->
-                        <div class="contract-card">
-                            <div>
-                                <div class="contract-title">Tier 25 Contract</div>
-                                <div class="contract-val">
-                                    <span style="color: #f7931a;">₿</span> + 0.000006310837 btc
-                                </div>
-                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-                                    <span class="active-dot"></span>
-                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
-                                </div>
-                            </div>
-                            <div class="hashrate-text">⚡ 36.58 Th/s</div>
-                        </div>
-
-                    </div>
-
-                    <!-- STATS GRID -->
-                    <div class="cards-grid" style="margin-top: 25px;">
-                        <div class="card">
-                            <h4>Active Deposit Balance</h4>
-                            <p id="totalBalance">$0.00</p>
-                        </div>
-                        <div class="card">
-                            <h4>Total Mined Earnings</h4>
-                            <p id="totalMined" style="color: #10b981;">$0.00</p>
-                        </div>
-                        <div class="card">
-                            <h4>Total Withdrawn</h4>
-                            <p id="totalWithdrawn" style="color: #ef4444;">$0.00</p>
-                        </div>
-                    </div>
-
-                    <!-- PROFIT CALCULATOR -->
-                    <div class="calc-box">
-                        <h3 style="font-size: 16px; margin-bottom: 10px;">🧮 Mining Profit Calculator ($10 Deposit = $16 Monthly Profit)</h3>
-                        <div class="input-group" style="margin-top: 15px; max-width: 300px;">
-                            <label>Enter Investment Amount ($)</label>
-                            <input type="number" id="calcInput" value="10" min="10" oninput="calculateProfit()">
-                        </div>
-
-                        <div class="calc-grid">
-                            <div class="calc-item">
-                                <span>Hourly Profit</span>
-                                <strong id="calcHourly">$0.022</strong>
-                            </div>
-                            <div class="calc-item">
-                                <span>Daily Profit</span>
-                                <strong id="calcDaily">$0.533</strong>
-                            </div>
-                            <div class="calc-item">
-                                <span>Weekly Profit</span>
-                                <strong id="calcWeekly">$3.733</strong>
-                            </div>
-                            <div class="calc-item">
-                                <span>Monthly Profit</span>
-                                <strong id="calcMonthly">$16.000</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- TAB 2: DEPOSIT PORTAL -->
-                <div id="tab-deposit" class="tab-content hidden">
-                    <div class="settings-form">
-                        <h3 style="margin-bottom: 10px;">Deposit Money</h3>
-                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Minimum Deposit: <b>$10.00</b></p>
-                        <div id="depositMsg" class="msg-box"></div>
-                        
-                        <form onsubmit="handleDepositRequest(event)">
-                            <label>Deposit Payment Method</label>
-                            <select id="depositGateway" required>
-                                <option value="" disabled selected>Select Payment Option</option>
-                                <option value="Easypaisa">Easypaisa (03001234567 - Title: Gost Bhai)</option>
-                                <option value="JazzCash">JazzCash (03007654321 - Title: Gost Bhai)</option>
-                            </select>
-
-                            <label>Your Account / Sender Number</label>
-                            <input type="text" id="depositSenderNum" placeholder="03XXXXXXXXX" required>
-
-                            <label>Transaction ID (Trx ID)</label>
-                            <input type="text" id="depositTrxId" placeholder="e.g. 92837410293" required>
-
-                            <label>Deposit Amount ($)</label>
-                            <input type="number" step="0.01" id="depositAmount" placeholder="10.00" min="10" required>
-
-                            <button type="submit" class="btn-save">Submit Deposit Request</button>
-                        </form>
-                    </div>
-
-                    <div class="table-container">
-                        <h3>Deposit History</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Gateway</th>
-                                    <th>Sender Number</th>
-                                    <th>TRX ID</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="depositHistoryBody">
-                                <tr><td colspan="5" style="text-align:center; color:#9ca3af;">No deposits yet.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- TAB 3: WITHDRAW PORTAL -->
-                <div id="tab-withdraw" class="tab-content hidden">
-                    <div class="settings-form">
-                        <h3 style="margin-bottom: 10px;">Withdraw Earnings</h3>
-                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Minimum Withdraw: <b>$5.00</b></p>
-                        <div id="withdrawMsg" class="msg-box"></div>
-                        
-                        <form onsubmit="handleWithdrawRequest(event)">
-                            <label>Withdrawal Gateway</label>
-                            <select id="withdrawGateway" required>
-                                <option value="" disabled selected>Select Payment Method</option>
-                                <option value="Easypaisa">Easypaisa</option>
-                                <option value="JazzCash">JazzCash</option>
-                            </select>
-
-                            <label>Account Number</label>
-                            <input type="text" id="withdrawNum" placeholder="03XXXXXXXXX" required>
-
-                            <label>Account Title Name</label>
-                            <input type="text" id="withdrawTitle" placeholder="Full Name" required>
-
-                            <label>Amount ($)</label>
-                            <input type="number" step="0.01" id="withdrawAmount" placeholder="5.00" min="5" required>
-
-                            <button type="submit" class="btn-save" style="background:#3b82f6;">Request Withdrawal</button>
-                        </form>
-                    </div>
-
-                    <div class="table-container">
-                        <h3>Withdrawal History</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Gateway</th>
-                                    <th>Account Title</th>
-                                    <th>Account Num</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="withdrawHistoryBody">
-                                <tr><td colspan="5" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- TAB 4: SETTINGS -->
-                <div id="tab-settings" class="tab-content hidden">
-                    <div class="settings-form">
-                        <h3 style="margin-bottom: 15px;">Account Settings</h3>
-                        <form onsubmit="handleUpdateSettings(event)">
-                            <label>Email Address</label>
-                            <input type="email" id="settingEmail" readonly style="opacity: 0.6;">
-
-                            <label>New Password</label>
-                            <input type="password" id="settingPassword" placeholder="Enter new password">
-
-                            <button type="submit" class="btn-save">Save Changes</button>
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // JS LOGIC & DYNAMIC GAUGE ANIMATION
-        let mainVal = 0.325297912548;
-
-        setInterval(() => {
-            mainVal += 0.000000000005;
-            
-            const mainElem = document.getElementById("miningLiveVal");
-            if (mainElem) mainElem.innerText = mainVal.toFixed(12);
-
-            // Needle oscillation simulation
-            const style = document.createElement('style');
-            const randomAngle = Math.floor(Math.random() * 40) - 20; // -20deg to 20deg
-            style.innerHTML = `.speed-gauge-visual::after { transform: rotate(${randomAngle}deg); }`;
-            document.head.appendChild(style);
-        }, 2000);
-
-        function showPage(pageId) {
-            document.querySelectorAll('.auth-container, .dashboard-layout').forEach(el => el.classList.add('hidden'));
-            document.getElementById(pageId).classList.remove('hidden');
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.sidebar ul li').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`menu-${tabName}`).classList.add('active');
-            
-            const titles = {
-                'dashboard': 'Mining Control Panel',
-                'deposit': 'Deposit Portal',
-                'withdraw': 'Withdraw Earnings',
-                'settings': 'Account Settings'
-            };
-            document.getElementById('pageTitle').innerText = titles[tabName];
-        }
-
-        function handleSendCode(e) {
-            e.preventDefault();
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('verifyForm').classList.remove('hidden');
-        }
-
-        function handleVerifyAndRegister(e) {
-            e.preventDefault();
-            document.getElementById('successModal').classList.remove('hidden');
-        }
-
-        function closeModalAndRedirect() {
-            document.getElementById('successModal').classList.add('hidden');
-            showPage('loginPage');
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('loginId').value || 'Miner';
-            document.getElementById('userNameDisplay').innerText = username;
-            showPage('dashboardPage');
-        }
-
-        function handleLogout() {
-            showPage('loginPage');
-        }
-
-        function calculateProfit() {
-            const amount = parseFloat(document.getElementById('calcInput').value) || 0;
-            const monthly = amount * 1.6;
-            const daily = monthly / 30;
-            const hourly = daily / 24;
-            const weekly = daily * 7;
-
-            document.getElementById('calcHourly').innerText = `$${hourly.toFixed(3)}`;
-            document.getElementById('calcDaily').innerText = `$${daily.toFixed(3)}`;
-            document.getElementById('calcWeekly').innerText = `$${weekly.toFixed(3)}`;
-            document.getElementById('calcMonthly').innerText = `$${monthly.toFixed(3)}`;
-        }
-
-        function closeSmsModal() {
-            document.getElementById('smsModal').classList.add('hidden');
-        }
-
-        function handleDepositRequest(e) {
-            e.preventDefault();
-            alert("Deposit request submitted successfully!");
-        }
-
-        function handleWithdrawRequest(e) {
-            e.preventDefault();
-            alert("Withdrawal request submitted successfully!");
-        }
-
-        function handleUpdateSettings(e) {
-            e.preventDefault();
-            alert("Settings updated!");
-        }
-    </script>
-</body>
-</html>
+                             </form>
