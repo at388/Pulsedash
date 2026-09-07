@@ -329,7 +329,7 @@
                 <div id="tab-dashboard" class="tab-content">
                     <div class="dashboard-modern">
                         
-                        <!-- BALANCE CARDS FIRST -->
+                        <!-- BALANCE CARDS -->
                         <div class="cards-grid">
                             <div class="card" style="border: 1px solid #10b981; background: rgba(16, 185, 129, 0.05);">
                                 <h4>Main Wallet Balance ($)</h4>
@@ -524,9 +524,9 @@
         let activeMining = false;
         let miningSpeedKH = 0;
         let currentBtcMined = 0.000000000000;
-        let userBalanceUSD = 0.00;
-        let totalClaimedUSD = 0.00;
-        let totalWithdrawnUSD = 0.00;
+        let userBalanceUSD = parseFloat(localStorage.getItem('userBalanceUSD')) || 0.00;
+        let totalClaimedUSD = parseFloat(localStorage.getItem('totalClaimedUSD')) || 0.00;
+        let totalWithdrawnUSD = parseFloat(localStorage.getItem('totalWithdrawnUSD')) || 0.00;
         let claimTimer = 0;
 
         let depositHistory = JSON.parse(localStorage.getItem('deposits')) || [];
@@ -535,8 +535,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 showPage('dashboardPage');
+                updateUIBalances();
                 renderDepositHistory();
                 renderWithdrawHistory();
+                checkPendingDeposits();
             } else {
                 showPage('loginPage');
             }
@@ -556,6 +558,46 @@
                 }
             }
         }, 1000);
+
+        // AUTO CHECK PENDING DEPOSITS EVERY 5 SECONDS (FOR BACKWARD COMPATIBILITY & PERSISTENCE)
+        setInterval(checkPendingDeposits, 5000);
+
+        function checkPendingDeposits() {
+            const now = Date.now();
+            let updated = false;
+
+            depositHistory.forEach(item => {
+                if (item.status === 'Pending') {
+                    // 3 Minutes = 180,000 ms
+                    if (now - item.id >= 180000) {
+                        item.status = 'Approved';
+                        userBalanceUSD += parseFloat(item.amount);
+                        updated = true;
+                        alert(`🎉 Deposit Approved! $${item.amount} has been verified and added to your Main Wallet Balance.`);
+                    }
+                }
+            });
+
+            if (updated) {
+                saveUserData();
+                updateUIBalances();
+                renderDepositHistory();
+            }
+        }
+
+        function updateUIBalances() {
+            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
+            document.getElementById('totalMined').innerText = `$${totalClaimedUSD.toFixed(2)}`;
+            document.getElementById('totalWithdrawn').innerText = `$${totalWithdrawnUSD.toFixed(2)}`;
+        }
+
+        function saveUserData() {
+            localStorage.setItem('userBalanceUSD', userBalanceUSD.toString());
+            localStorage.setItem('totalClaimedUSD', totalClaimedUSD.toString());
+            localStorage.setItem('totalWithdrawnUSD', totalWithdrawnUSD.toString());
+            localStorage.setItem('deposits', JSON.stringify(depositHistory));
+            localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
+        }
 
         function showPage(pageId) {
             document.querySelectorAll('.auth-container, .dashboard-layout').forEach(el => el.classList.add('hidden'));
@@ -577,6 +619,7 @@
             document.getElementById('userNameDisplay').innerText = username;
             showPage('dashboardPage');
             switchTab('dashboard');
+            updateUIBalances();
         }
 
         function handleLogout() {
@@ -618,25 +661,24 @@
             };
 
             depositHistory.unshift(newDeposit);
-            localStorage.setItem('deposits', JSON.stringify(depositHistory));
+            saveUserData();
             renderDepositHistory();
 
-            alert("Deposit request submitted! Verification takes up to 3 minutes.");
+            // DISPLAY "UP TO 30 MINUTES" MESSAGE TO USER
+            alert("Your deposit request has been submitted successfully!\nVerification takes up to 30 minutes.");
             e.target.reset();
 
-            // Auto-Approval Simulation (3 Minutes)
+            // EXACT 3-MINUTE TIMER FOR AUTOMATIC APPROVAL
             setTimeout(() => {
                 const item = depositHistory.find(d => d.id === newDeposit.id);
                 if (item && item.status === 'Pending') {
                     item.status = 'Approved';
-                    localStorage.setItem('deposits', JSON.stringify(depositHistory));
+                    userBalanceUSD += parseFloat(amount);
+                    saveUserData();
+                    updateUIBalances();
                     renderDepositHistory();
 
-                    // ADD DEPOSIT AMOUNT DIRECTLY TO MAIN BALANCE
-                    userBalanceUSD += parseFloat(amount);
-                    document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
-
-                    alert(`🎉 Deposit Approved! $${amount} has been added to your Main Wallet Balance. You can now select a Plan from the Dashboard.`);
+                    alert(`🎉 Payment Verified! $${amount} has been credited to your Main Wallet Balance.`);
                 }
             }, 180000); 
         }
@@ -648,11 +690,10 @@
                 return;
             }
 
-            // Deduct cost from Main Balance
             userBalanceUSD -= cost;
-            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
+            saveUserData();
+            updateUIBalances();
 
-            // Activate Speedometer
             activeMining = true;
             miningSpeedKH += speed;
 
@@ -698,6 +739,7 @@
                 <div class="receipt-row"><span>Gateway:</span> <strong>${item.gateway}</strong></div>
                 <div class="receipt-row"><span>Sender Num:</span> <strong>${item.senderNum}</strong></div>
                 <div class="receipt-row"><span>Amount Deposited:</span> <strong style="color:#10b981;">$${item.amount} USD</strong></div>
+                <div class="receipt-row"><span>Verification Time:</span> <strong>Up to 30 Minutes</strong></div>
                 <div class="receipt-row"><span>Date & Time:</span> <strong>${item.date}</strong></div>
             `;
             document.getElementById('receiptModal').classList.remove('hidden');
@@ -711,8 +753,8 @@
             userBalanceUSD += earnedUSD;
             totalClaimedUSD += earnedUSD;
 
-            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
-            document.getElementById('totalMined').innerText = `$${totalClaimedUSD.toFixed(2)}`;
+            saveUserData();
+            updateUIBalances();
 
             currentBtcMined = 0.000000000000;
             document.getElementById('liveBtcVal').innerText = "0.000000000000";
@@ -748,8 +790,8 @@
 
             userBalanceUSD -= amount;
             totalWithdrawnUSD += amount;
-            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
-            document.getElementById('totalWithdrawn').innerText = `$${totalWithdrawnUSD.toFixed(2)}`;
+            saveUserData();
+            updateUIBalances();
 
             withdrawalHistory.unshift(newWithdrawal);
             localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
@@ -762,7 +804,7 @@
                 const item = withdrawalHistory.find(w => w.id === newWithdrawal.id);
                 if (item) {
                     item.status = 'Approved';
-                    localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
+                    saveUserData();
                     renderWithdrawHistory();
                 }
             }, 3000);
