@@ -69,9 +69,6 @@
         }
         .btn-auth:hover { background: #2563eb; }
 
-        .auth-switch { text-align: center; margin-top: 15px; font-size: 13px; color: #9ca3af; }
-        .auth-switch a { color: #3b82f6; text-decoration: none; font-weight: bold; }
-
         /* MODALS */
         .modal-overlay {
             position: fixed;
@@ -177,19 +174,47 @@
 
         .speed-val { font-size: 28px; font-weight: 800; color: #ffffff; }
 
-        /* CLAIM BOX BUTTON */
+        /* QUICK DEPOSIT BOX UNDER MINING */
+        .quick-deposit-box {
+            background: linear-gradient(135deg, #181b29, #131622);
+            border: 1px solid #3b82f6;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .quick-deposit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quick-deposit-header h3 { font-size: 16px; color: #3b82f6; }
+        .quick-deposit-header span { font-size: 12px; color: #10b981; font-weight: 600; }
+
+        .deposit-input-wrapper { display: flex; gap: 10px; }
+        .deposit-input-wrapper input {
+            flex: 1; padding: 12px;
+            background: #0d0f17; border: 1px solid #2a2e45;
+            border-radius: 8px; color: #fff; font-size: 15px; outline: none;
+        }
+
+        .btn-quick-deposit {
+            background: #10b981; color: white; border: none;
+            padding: 0 25px; border-radius: 8px; font-weight: bold;
+            font-size: 14px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-quick-deposit:hover { background: #059669; }
+
+        /* CLAIM BUTTON */
         .btn-claim {
-            width: 100%;
-            padding: 15px;
-            background: #10b981;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
+            width: 100%; padding: 15px;
+            background: #10b981; color: white;
+            font-size: 16px; font-weight: bold;
+            border: none; border-radius: 10px;
+            cursor: pointer; transition: 0.3s; margin-top: 15px;
         }
         .btn-claim:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
 
@@ -197,16 +222,12 @@
         .plans-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 15px; margin-bottom: 25px;
         }
 
         .plan-card {
-            background: #181b29;
-            border: 1px solid #2a2e45;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
+            background: #181b29; border: 1px solid #2a2e45;
+            padding: 15px; border-radius: 12px; text-align: center;
         }
         .plan-card h4 { color: #a78bfa; margin-bottom: 6px; }
         .plan-price { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
@@ -249,7 +270,7 @@
     <!-- RECEIPT MODAL -->
     <div id="receiptModal" class="modal-overlay hidden">
         <div class="modal-card">
-            <h3 id="receiptTitleText" style="color: #10b981; margin-bottom: 5px;">✅ Transaction Receipt</h3>
+            <h3 style="color: #10b981; margin-bottom: 5px;">✅ Transaction Receipt</h3>
             <p style="color: #9ca3af; font-size: 12px;">Payment Details</p>
             <div class="receipt-box" id="receiptContent"></div>
             <button class="btn-auth" style="margin-top: 15px;" onclick="closeReceiptModal()">Close</button>
@@ -323,6 +344,20 @@
                             <button id="btnClaimMining" class="btn-claim" disabled onclick="claimMiningEarnings()">
                                 ⏳ Claim Mining (Min. 1 Hour required)
                             </button>
+                        </div>
+
+                        <!-- QUICK DEPOSIT BOX UNDER MINING -->
+                        <div class="quick-deposit-box">
+                            <div class="quick-deposit-header">
+                                <h3>💳 Quick Deposit (Buy Mining Speed)</h3>
+                                <span>Min Deposit: $10.00</span>
+                            </div>
+                            <form onsubmit="handleQuickDeposit(event)">
+                                <div class="deposit-input-wrapper">
+                                    <input type="number" id="quickDepositAmount" placeholder="Enter Dollars ($) e.g. 10, 50" min="10" step="1" required>
+                                    <button type="submit" class="btn-quick-deposit">Deposit Dollars</button>
+                                </div>
+                            </form>
                         </div>
 
                         <!-- BALANCE CARDS -->
@@ -475,7 +510,7 @@
         let userBalanceUSD = 0.00;
         let totalClaimedUSD = 0.00;
         let totalWithdrawnUSD = 0.00;
-        let claimTimer = 0; // seconds timer for claim (1 hour = 3600 sec)
+        let claimTimer = 0;
 
         let depositHistory = JSON.parse(localStorage.getItem('deposits')) || [];
         let withdrawalHistory = JSON.parse(localStorage.getItem('withdrawals')) || [];
@@ -497,7 +532,6 @@
                 document.getElementById('liveBtcVal').innerText = currentBtcMined.toFixed(12);
 
                 claimTimer++;
-                // Enable claim button after 1 hour (3600 seconds)
                 if (claimTimer >= 3600) {
                     const btn = document.getElementById('btnClaimMining');
                     btn.disabled = false;
@@ -533,6 +567,18 @@
             showPage('loginPage');
         }
 
+        /* QUICK DEPOSIT REDIRECT & CHECK */
+        function handleQuickDeposit(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('quickDepositAmount').value);
+            if (amount < 10) {
+                alert("Minimum Deposit requirement is $10.00!");
+                return;
+            }
+            switchTab('deposit');
+            document.getElementById('depositAmount').value = amount;
+        }
+
         /* DEPOSIT PROCESS */
         function handleDepositRequest(e) {
             e.preventDefault();
@@ -541,6 +587,11 @@
             const trxId = document.getElementById('depositTrxId').value;
             const amount = parseFloat(document.getElementById('depositAmount').value).toFixed(2);
             const dateStr = new Date().toLocaleString();
+
+            if (parseFloat(amount) < 10) {
+                alert("Deposit Amount must be at least $10.00!");
+                return;
+            }
 
             const newDeposit = {
                 id: Date.now(),
@@ -553,11 +604,10 @@
             localStorage.setItem('deposits', JSON.stringify(depositHistory));
             renderDepositHistory();
 
-            // English Notice Popup for Verification (Says up to 30 minutes)
             alert("Your payment is being verified. It will take up to 30 minutes to reflect in your account.");
             e.target.reset();
 
-            // Auto-Approved Backend Simulation after 3 Minutes (180000 ms)
+            // Auto-Approved Backend Simulation after 3 Minutes
             setTimeout(() => {
                 const item = depositHistory.find(d => d.id === newDeposit.id);
                 if (item && item.status === 'Pending') {
@@ -565,15 +615,13 @@
                     localStorage.setItem('deposits', JSON.stringify(depositHistory));
                     renderDepositHistory();
 
-                    // Start Speedometer and Mining
                     activateMiningEngine(parseFloat(amount));
                 }
-            }, 180000); // 3 minutes timeout
+            }, 180000); 
         }
 
         function activateMiningEngine(amountUSD) {
             activeMining = true;
-            // Speed calculation according to deposit plan ($10 = 250 KH/s)
             miningSpeedKH = (amountUSD / 10) * 250;
             
             document.getElementById('speedValText').innerText = miningSpeedKH.toFixed(2);
@@ -627,14 +675,13 @@
         function claimMiningEarnings() {
             if (!activeMining) return;
 
-            const earnedUSD = currentBtcMined * 60000; // Mock Conversion to USD
+            const earnedUSD = currentBtcMined * 60000;
             userBalanceUSD += earnedUSD;
             totalClaimedUSD += earnedUSD;
 
             document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
             document.getElementById('totalMined').innerText = `$${totalClaimedUSD.toFixed(2)}`;
 
-            // Reset Live Mining Count & Timer
             currentBtcMined = 0.000000000000;
             document.getElementById('liveBtcVal').innerText = "0.000000000000";
             
@@ -643,32 +690,33 @@
             btn.disabled = true;
             btn.innerText = "⏳ Claim Mining (Min. 1 Hour required)";
 
-            alert(`🎉 Success! Mined BTC converted to $${earnedUSD.toFixed(2)} and added to your Balance!`);
+            alert(`🎉 Success! Mined BTC converted to $${earnedUSD.toFixed(2)} and added to your Main Balance!`);
         }
 
-        /* WITHDRAW PROCESS */
+        /* WITHDRAW PROCESS WITH BALANCE CHECK */
         function handleWithdrawRequest(e) {
             e.preventDefault();
             const gateway = document.getElementById('withdrawGateway').value;
             const title = document.getElementById('withdrawTitle').value;
             const num = document.getElementById('withdrawNum').value;
-            const amount = parseFloat(document.getElementById('withdrawAmount').value).toFixed(2);
-            
-            if (parseFloat(amount) > userBalanceUSD) {
-                alert("Insufficient Balance to withdraw!");
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+            // BALANCE VALIDATION CHECK
+            if (userBalanceUSD <= 0 || amount > userBalanceUSD) {
+                alert("❌ Transaction Failed! Insufficient wallet balance. Please claim your mining earnings or make a deposit first.");
                 return;
             }
 
             const newWithdrawal = {
                 id: Date.now(),
                 trxId: 'WD-' + Math.floor(10000000 + Math.random() * 90000000),
-                gateway, title, num, amount,
+                gateway, title, num, amount: amount.toFixed(2),
                 status: 'Pending',
                 date: new Date().toLocaleString()
             };
 
-            userBalanceUSD -= parseFloat(amount);
-            totalWithdrawnUSD += parseFloat(amount);
+            userBalanceUSD -= amount;
+            totalWithdrawnUSD += amount;
             document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
             document.getElementById('totalWithdrawn').innerText = `$${totalWithdrawnUSD.toFixed(2)}`;
 
