@@ -575,4 +575,323 @@
                                     <input type="number" id="quickDepositAmount" placeholder="Enter Dollars ($) e.g. 5, 10, 50" min="5" step="1" required>
                                     <button type="submit" class="btn-quick-deposit">Deposit Dollars</button>
                                 </div>
-                             </form>
+                            </form>
+                        </div>
+
+                        <!-- CONTRACTS LIST SECTION -->
+                        <div class="contracts-header">Active Hashrate Contracts</div>
+
+                        <!-- Contract 1 -->
+                        <div class="contract-card">
+                            <div>
+                                <div class="contract-title">Tier 23 Contract</div>
+                                <div class="contract-val">
+                                    <span style="color: #f7931a;">₿</span> + 0.000005170186 BTC
+                                </div>
+                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                    <span class="active-dot"></span>
+                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
+                                </div>
+                            </div>
+                            <div class="hashrate-text">⚡ 29.97 Th/s</div>
+                        </div>
+
+                        <!-- Contract 2 (Highlighted) -->
+                        <div class="contract-card active-highlight">
+                            <div>
+                                <div class="contract-title">Tier 24 Contract</div>
+                                <div class="contract-val">
+                                    <span style="color: #f7931a;">₿</span> + 0.000005068481 BTC
+                                </div>
+                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                    <span class="active-dot"></span>
+                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
+                                </div>
+                            </div>
+                            <div class="hashrate-text">⚡ 45.20 Th/s</div>
+                        </div>
+
+                    </div>
+
+                    <!-- STATS GRID IN DOLLARS -->
+                    <div class="cards-grid" style="margin-top: 25px;">
+                        <div class="card">
+                            <h4>Active Balance ($)</h4>
+                            <p id="totalBalance">$0.00</p>
+                        </div>
+                        <div class="card">
+                            <h4>Mined Earnings ($)</h4>
+                            <p id="totalMined" style="color: #10b981;">$0.00</p>
+                        </div>
+                        <div class="card">
+                            <h4>Total Withdrawn ($)</h4>
+                            <p id="totalWithdrawn" style="color: #ef4444;">$0.00</p>
+                        </div>
+                    </div>
+
+                    <!-- PROFIT CALCULATOR -->
+                    <div class="calc-box">
+                        <h3 style="font-size: 16px; margin-bottom: 10px;">🧮 Mining Profit Calculator ($)</h3>
+                        <div class="input-group" style="margin-top: 15px; max-width: 300px;">
+                            <label>Enter Investment Dollars ($)</label>
+                            <input type="number" id="calcInput" value="5" min="5" oninput="calculateProfit()">
+                        </div>
+
+                        <div class="calc-grid">
+                            <div class="calc-item">
+                                <span>Hourly Profit</span>
+                                <strong id="calcHourly">$0.011</strong>
+                            </div>
+                            <div class="calc-item">
+                                <span>Daily Profit</span>
+                                <strong id="calcDaily">$0.266</strong>
+                            </div>
+                            <div class="calc-item">
+                                <span>Weekly Profit</span>
+                                <strong id="calcWeekly">$1.866</strong>
+                            </div>
+                            <div class="calc-item">
+                                <span>Monthly Profit</span>
+                                <strong id="calcMonthly">$8.000</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 2: DEPOSIT PORTAL -->
+                <div id="tab-deposit" class="tab-content hidden">
+                    <div class="settings-form">
+                        <h3 style="margin-bottom: 10px;">Deposit Money (USD)</h3>
+                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Minimum Deposit: <b>$5.00</b></p>
+                        <div id="depositMsg" class="msg-box"></div>
+                        
+                        <form onsubmit="handleDepositRequest(event)">
+                            <label>Deposit Payment Method</label>
+                            <select id="depositGateway" required>
+                                <option value="" disabled selected>Select Payment Option</option>
+                                <option value="Easypaisa">Easypaisa (03001234567 - Title: Gost Bhai)</option>
+                                <option value="JazzCash">JazzCash (03007654321 - Title: Gost Bhai)</option>
+                            </select>
+
+                            <label>Your Account Number</label>
+                            <input type="text" id="depositSenderNum" placeholder="03XXXXXXXXX" required>
+
+                            <label>Transaction ID (Trx ID)</label>
+                            <input type="text" id="depositTrxId" placeholder="e.g. 92837410293" required>
+
+                            <label>Deposit Amount ($ Dollars)</label>
+                            <input type="number" step="0.01" id="depositAmount" placeholder="5.00" min="5" required>
+
+                            <button type="submit" class="btn-save">Submit Deposit Request</button>
+                        </form>
+                    </div>
+
+                    <div class="table-container">
+                        <h3>Deposit History</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Gateway</th>
+                                    <th>Sender Number</th>
+                                    <th>TRX ID</th>
+                                    <th>Amount ($)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="depositHistoryBody">
+                                <tr><td colspan="5" style="text-align:center; color:#9ca3af;">No deposits yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 3: WITHDRAW PORTAL -->
+                <div id="tab-withdraw" class="tab-content hidden">
+                    <div class="settings-form">
+                        <h3 style="margin-bottom: 10px;">Withdraw Earnings (USD)</h3>
+                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Minimum Withdraw: <b>$5.00</b></p>
+                        
+                        <form onsubmit="handleWithdrawRequest(event)">
+                            <label>Withdrawal Gateway</label>
+                            <select id="withdrawGateway" required>
+                                <option value="" disabled selected>Select Payment Method</option>
+                                <option value="Easypaisa">Easypaisa</option>
+                                <option value="JazzCash">JazzCash</option>
+                            </select>
+
+                            <label>Account Number</label>
+                            <input type="text" id="withdrawNum" placeholder="03XXXXXXXXX" required>
+
+                            <label>Account Title Name</label>
+                            <input type="text" id="withdrawTitle" placeholder="Full Name" required>
+
+                            <label>Amount ($ Dollars)</label>
+                            <input type="number" step="0.01" id="withdrawAmount" placeholder="5.00" min="5" required>
+
+                            <button type="submit" class="btn-save" style="background:#3b82f6;">Request Withdrawal</button>
+                        </form>
+                    </div>
+
+                    <div class="table-container">
+                        <h3>Withdrawal History</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Gateway</th>
+                                    <th>Account Title</th>
+                                    <th>Account Num</th>
+                                    <th>Amount ($)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawHistoryBody">
+                                <tr><td colspan="5" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 4: SETTINGS -->
+                <div id="tab-settings" class="tab-content hidden">
+                    <div class="settings-form">
+                        <h3 style="margin-bottom: 15px;">Account Settings</h3>
+                        <form onsubmit="handleUpdateSettings(event)">
+                            <label>Email Address</label>
+                            <input type="email" id="settingEmail" readonly style="opacity: 0.6;">
+
+                            <label>New Password</label>
+                            <input type="password" id="settingPassword" placeholder="Enter new password">
+
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mainVal = 0.325297912548;
+
+        // Page Load hone par state checking
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const currentUser = localStorage.getItem('currentUser');
+            const activeTab = localStorage.getItem('activeTab') || 'dashboard';
+
+            if (isLoggedIn === 'true') {
+                document.getElementById('userNameDisplay').innerText = currentUser || 'Miner';
+                showPage('dashboardPage');
+                switchTab(activeTab);
+            } else {
+                showPage('signupPage');
+            }
+        });
+
+        setInterval(() => {
+            mainVal += 0.000000000005;
+            const mainElem = document.getElementById("miningLiveVal");
+            if (mainElem) mainElem.innerText = mainVal.toFixed(12);
+        }, 2000);
+
+        function showPage(pageId) {
+            document.querySelectorAll('.auth-container, .dashboard-layout').forEach(el => el.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.sidebar ul li').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`menu-${tabName}`).classList.add('active');
+            
+            // Active tab ko save kar rahe hain
+            localStorage.setItem('activeTab', tabName);
+
+            const titles = {
+                'dashboard': 'Mining Control Panel',
+                'deposit': 'Deposit Portal ($)',
+                'withdraw': 'Withdraw Earnings ($)',
+                'settings': 'Account Settings'
+            };
+            document.getElementById('pageTitle').innerText = titles[tabName];
+        }
+
+        function handleSendCode(e) {
+            e.preventDefault();
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('verifyForm').classList.remove('hidden');
+        }
+
+        function handleVerifyAndRegister(e) {
+            e.preventDefault();
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeModalAndRedirect() {
+            document.getElementById('successModal').classList.add('hidden');
+            showPage('loginPage');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginId').value || 'Miner';
+            
+            // Login Session State Saved
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', username);
+            
+            document.getElementById('userNameDisplay').innerText = username;
+            showPage('dashboardPage');
+            switchTab('dashboard');
+        }
+
+        function handleLogout() {
+            // Logout par session clear karna
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('activeTab');
+            showPage('loginPage');
+        }
+
+        function handleQuickDeposit(e) {
+            e.preventDefault();
+            const amount = document.getElementById('quickDepositAmount').value;
+            alert(`$${amount} Deposit request initiated! Redirecting to deposit portal...`);
+            switchTab('deposit');
+            document.getElementById('depositAmount').value = amount;
+        }
+
+        function calculateProfit() {
+            const amount = parseFloat(document.getElementById('calcInput').value) || 0;
+            const monthly = amount * 1.6;
+            const daily = monthly / 30;
+            const hourly = daily / 24;
+            const weekly = daily * 7;
+
+            document.getElementById('calcHourly').innerText = `$${hourly.toFixed(3)}`;
+            document.getElementById('calcDaily').innerText = `$${daily.toFixed(3)}`;
+            document.getElementById('calcWeekly').innerText = `$${weekly.toFixed(3)}`;
+            document.getElementById('calcMonthly').innerText = `$${monthly.toFixed(3)}`;
+        }
+
+        function handleDepositRequest(e) {
+            e.preventDefault();
+            alert("Deposit request submitted successfully!");
+        }
+
+        function handleWithdrawRequest(e) {
+            e.preventDefault();
+            alert("Withdrawal request submitted successfully!");
+        }
+
+        function handleUpdateSettings(e) {
+            e.preventDefault();
+            alert("Settings updated!");
+        }
+    </script>
+</body>
+</html>
