@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Mining Platform</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -19,9 +18,7 @@
             min-height: 100vh;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         /* AUTHENTICATION */
         .auth-container {
@@ -42,24 +39,10 @@
             border: 1px solid #2a2e45;
         }
 
-        .auth-card h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
+        .auth-card h2 { text-align: center; margin-bottom: 20px; color: #ffffff; }
 
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            color: #9ca3af;
-            font-weight: 600;
-        }
-
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 6px; font-size: 13px; color: #9ca3af; font-weight: 600; }
         .input-group input, .input-group select {
             width: 100%;
             padding: 12px;
@@ -84,44 +67,17 @@
             transition: 0.3s;
             margin-top: 10px;
         }
+        .btn-auth:hover { background: #2563eb; }
 
-        .btn-auth:hover {
-            background: #2563eb;
-        }
+        .auth-switch { text-align: center; margin-top: 15px; font-size: 13px; color: #9ca3af; }
+        .auth-switch a { color: #3b82f6; text-decoration: none; font-weight: bold; }
 
-        .msg-box {
-            font-size: 13px;
-            margin-bottom: 12px;
-            text-align: center;
-            display: none;
-        }
-
-        .error-msg { color: #ef4444; }
-        .success-msg { color: #10b981; }
-
-        .auth-switch {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
-            color: #9ca3af;
-        }
-
-        .auth-switch a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
+        /* MODALS */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex; justify-content: center; align-items: center;
             z-index: 1000;
         }
 
@@ -130,9 +86,8 @@
             padding: 25px;
             border-radius: 16px;
             text-align: center;
-            max-width: 400px;
+            max-width: 420px;
             width: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid #2a2e45;
         }
 
@@ -164,46 +119,15 @@
         .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .content-area { padding: 30px; max-width: 900px; margin: 0 auto; width: 100%; }
 
-        /* YOUTUBE SUBSCRIBE SPECIAL CARD */
-        .yt-subscribe-card {
-            background: linear-gradient(135deg, #dc2626, #991b1b);
-            color: white;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
-        }
-        .yt-info h3 { font-size: 16px; margin-bottom: 4px; }
-        .yt-info p { font-size: 13px; opacity: 0.9; }
-        .btn-yt-sub {
-            background: #ffffff;
-            color: #dc2626;
-            padding: 8px 18px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 13px;
-            transition: 0.3s;
-        }
-        .btn-yt-sub:hover { background: #f3f4f6; transform: scale(1.05); }
-
-        /* MODERN CRYPTO DASHBOARD STYLES */
-        .dashboard-modern {
-            background: #0d0f17;
-            color: #ffffff;
-            padding: 20px;
-            border-radius: 16px;
-        }
-
+        /* SPEEDOMETER & MINING DISPLAY */
+        .dashboard-modern { background: #0d0f17; color: #ffffff; padding: 10px; }
+        
         .top-status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #181b29;
-            padding: 12px 20px;
+            padding: 15px 20px;
             border-radius: 30px;
             margin-bottom: 25px;
             border: 1px solid #2a2e45;
@@ -216,12 +140,11 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             color: #f7931a;
         }
 
-        /* GAUGE & SPEED DISPLAY */
         .gauge-section {
             background: #131622;
             border-radius: 20px;
@@ -232,165 +155,62 @@
         }
 
         .speed-gauge-visual {
-            width: 200px;
-            height: 100px;
-            border-top-left-radius: 110px;
-            border-top-right-radius: 110px;
-            border: 12px solid #2a2a40;
-            border-bottom: 0;
+            width: 200px; height: 100px;
+            border-top-left-radius: 110px; border-top-right-radius: 110px;
+            border: 12px solid #2a2a40; border-bottom: 0;
             margin: 0 auto 15px auto;
             position: relative;
-            background: linear-gradient(180deg, rgba(147, 51, 234, 0.2) 0%, rgba(0,0,0,0) 100%);
         }
 
-        .speed-gauge-visual::after {
-            content: '';
+        .speed-needle {
             position: absolute;
-            bottom: -5px;
-            left: 50%;
-            width: 4px;
-            height: 65px;
+            bottom: -5px; left: 50%;
+            width: 4px; height: 65px;
             background: #a855f7;
             transform-origin: bottom center;
-            transform: rotate(25deg);
+            transform: rotate(-90deg);
             border-radius: 2px;
-            box-shadow: 0 0 10px #a855f7;
-            transition: transform 0.5s ease;
+            transition: transform 1s ease-in-out;
         }
 
-        .speed-val {
-            font-size: 28px;
-            font-weight: 800;
-            color: #ffffff;
-        }
+        .speed-needle.active { transform: rotate(35deg); box-shadow: 0 0 10px #a855f7; }
 
-        .boost-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #211c38;
-            color: #a855f7;
-            padding: 8px 18px;
-            border-radius: 20px;
-            margin-top: 15px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid #3b2d54;
-        }
+        .speed-val { font-size: 28px; font-weight: 800; color: #ffffff; }
 
-        /* QUICK DEPOSIT BOX UNDER MINING */
-        .quick-deposit-box {
-            background: linear-gradient(135deg, #181b29, #131622);
-            border: 1px solid #3b82f6;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
-        }
-
-        .quick-deposit-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .quick-deposit-header h3 {
-            font-size: 16px;
-            color: #3b82f6;
-        }
-
-        .quick-deposit-header span {
-            font-size: 12px;
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .deposit-input-wrapper {
-            display: flex;
-            gap: 10px;
-        }
-
-        .deposit-input-wrapper input {
-            flex: 1;
-            padding: 12px;
-            background: #0d0f17;
-            border: 1px solid #2a2e45;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .btn-quick-deposit {
+        /* CLAIM BOX BUTTON */
+        .btn-claim {
+            width: 100%;
+            padding: 15px;
             background: #10b981;
             color: white;
-            border: none;
-            padding: 0 25px;
-            border-radius: 8px;
+            font-size: 16px;
             font-weight: bold;
-            font-size: 14px;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
             transition: 0.3s;
+            margin-top: 15px;
+        }
+        .btn-claim:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
+
+        /* PLAN CARDS GRID */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .btn-quick-deposit:hover {
-            background: #059669;
-        }
-
-        /* CONTRACT CARDS GRID */
-        .contracts-header {
-            font-size: 16px;
-            color: #9ca3af;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .contract-card {
+        .plan-card {
             background: #181b29;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid #282c40;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border: 1px solid #2a2e45;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
         }
-
-        .contract-card.active-highlight {
-            background: linear-gradient(135deg, #2a1b4e 0%, #181b29 100%);
-            border: 1px solid #7c3aed;
-            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
-        }
-
-        .contract-title {
-            font-size: 13px;
-            color: #9ca3af;
-            margin-bottom: 6px;
-        }
-
-        .contract-val {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .active-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #22c55e;
-        }
-
-        .hashrate-text {
-            font-size: 12px;
-            color: #6b7280;
-        }
+        .plan-card h4 { color: #a78bfa; margin-bottom: 6px; }
+        .plan-price { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+        .plan-speed { font-size: 12px; color: #10b981; font-weight: 600; }
 
         /* STATS GRID */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
@@ -398,158 +218,52 @@
         .card h4 { color: #9ca3af; font-size: 12px; margin-bottom: 6px; }
         .card p { font-size: 20px; font-weight: bold; color: #ffffff; }
 
-        .calc-box {
-            background: #161926;
-            padding: 20px;
-            border-radius: 14px;
-            border: 1px solid #2a2e45;
-            margin-bottom: 25px;
-        }
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .calc-item {
-            background: #0d0f17;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #1f2333;
-        }
-        .calc-item span { display: block; font-size: 11px; color: #9ca3af; }
-        .calc-item strong { font-size: 15px; color: #10b981; }
-
+        /* TABLES */
         .table-container { background: #161926; padding: 20px; border-radius: 14px; border: 1px solid #2a2e45; margin-top: 25px; }
         table { width: 100%; border-collapse: collapse; margin-top: 12px; }
         table th, table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #2a2e45; font-size: 13px; }
         table th { background: #0d0f17; color: #9ca3af; }
 
-        .settings-form { background: #161926; padding: 25px; border-radius: 14px; max-width: 500px; border: 1px solid #2a2e45; }
-        .settings-form input, .settings-form select { width: 100%; padding: 10px; margin: 6px 0 16px 0; background: #0d0f17; border: 1px solid #2a2e45; color: white; border-radius: 6px; }
-        .btn-save { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
         /* STATUS BADGES & RECEIPT BUTTON */
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            display: inline-block;
-        }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; }
         .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b; }
         .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
         
         .btn-receipt {
-            background: #3b82f6;
-            color: #fff;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            margin-top: 4px;
-            display: inline-block;
-            font-weight: bold;
+            background: #3b82f6; color: #fff; border: none;
+            padding: 4px 10px; border-radius: 4px; font-size: 11px;
+            cursor: pointer; margin-top: 4px; display: inline-block; font-weight: bold;
         }
-        .btn-receipt:hover { background: #2563eb; }
 
-        /* RECEIPT CARD MODAL STYLING */
         .receipt-box {
-            text-align: left;
-            background: #0d0f17;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px dashed #3b82f6;
-            margin-top: 15px;
-            color: #fff;
-            font-size: 13px;
+            text-align: left; background: #0d0f17; padding: 20px;
+            border-radius: 12px; border: 1px dashed #3b82f6;
+            margin-top: 15px; color: #fff; font-size: 13px;
         }
-        .receipt-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #1f2333;
-            padding-bottom: 6px;
-        }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #1f2333; padding-bottom: 6px; }
         .receipt-row span { color: #9ca3af; }
-        .receipt-row strong { color: #fff; }
     </style>
 </head>
 <body>
 
-    <!-- SUCCESS REGISTRATION MODAL -->
-    <div id="successModal" class="modal-overlay hidden">
-        <div class="modal-card">
-            <h3 style="color: #10b981; margin-bottom: 10px;">🎉 Welcome Bonus Claimed!</h3>
-            <p style="color: #9ca3af; font-size: 14px; margin-bottom: 20px;">Account created! $10 Welcome Bonus added to your account.</p>
-            <button class="btn-auth" onclick="closeModalAndRedirect()">Proceed to Login</button>
-        </div>
-    </div>
-
-    <!-- WITHDRAW RECEIPT MODAL -->
+    <!-- RECEIPT MODAL -->
     <div id="receiptModal" class="modal-overlay hidden">
-        <div class="modal-card" style="max-width: 420px;">
-            <h3 style="color: #10b981; margin-bottom: 5px;">✅ Withdrawal Receipt</h3>
-            <p style="color: #9ca3af; font-size: 12px;">Transaction Completed Successfully</p>
-            
-            <div class="receipt-box" id="receiptContent">
-                <!-- Receipt details populated via JS -->
-            </div>
-
-            <button class="btn-auth" style="margin-top: 15px;" onclick="closeReceiptModal()">Close Receipt</button>
+        <div class="modal-card">
+            <h3 id="receiptTitleText" style="color: #10b981; margin-bottom: 5px;">✅ Transaction Receipt</h3>
+            <p style="color: #9ca3af; font-size: 12px;">Payment Details</p>
+            <div class="receipt-box" id="receiptContent"></div>
+            <button class="btn-auth" style="margin-top: 15px;" onclick="closeReceiptModal()">Close</button>
         </div>
     </div>
 
-    <!-- 1. SIGNUP PAGE -->
-    <div id="signupPage" class="auth-container">
-        <div class="auth-card">
-            <h2>Create Account</h2>
-            
-            <div id="signupError" class="msg-box error-msg"></div>
-            <div id="signupSuccess" class="msg-box success-msg"></div>
-            
-            <form id="signupForm" onsubmit="handleSendCode(event)">
-                <div class="input-group">
-                    <label>Username</label>
-                    <input type="text" id="regUsername" placeholder="e.g. miner123" required>
-                </div>
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" id="regEmail" placeholder="name@example.com" required>
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" id="regPassword" placeholder="******" required>
-                </div>
-                <button type="submit" class="btn-auth" id="btnSendCode">Send Verification Code</button>
-            </form>
-
-            <form id="verifyForm" class="hidden" onsubmit="handleVerifyAndRegister(event)" style="margin-top: 15px;">
-                <div class="input-group">
-                    <label>Enter Email OTP Code</label>
-                    <input type="text" id="enteredCode" placeholder="6-digit code" required>
-                </div>
-                <button type="submit" class="btn-auth">Register Account</button>
-            </form>
-
-            <div class="auth-switch">
-                Already have an account? <a href="#" onclick="showPage('loginPage')">Log in</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. LOGIN PAGE -->
-    <div id="loginPage" class="auth-container hidden">
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="auth-container">
         <div class="auth-card">
             <h2>Account Login</h2>
-            <div id="loginError" class="msg-box error-msg"></div>
-            
             <form onsubmit="handleLogin(event)">
                 <div class="input-group">
-                    <label>Username or Email</label>
-                    <input type="text" id="loginId" placeholder="Username or Email" required>
+                    <label>Username / Email</label>
+                    <input type="text" id="loginId" placeholder="Enter username" required>
                 </div>
                 <div class="input-group">
                     <label>Password</label>
@@ -557,32 +271,25 @@
                 </div>
                 <button type="submit" class="btn-auth">Log In</button>
             </form>
-
-            <div class="auth-switch">
-                Need a new account? <a href="#" onclick="showPage('signupPage')">Sign up</a>
-            </div>
         </div>
     </div>
 
-    <!-- 3. DASHBOARD MAIN -->
+    <!-- DASHBOARD LAYOUT -->
     <div id="dashboardPage" class="dashboard-layout hidden">
-        
         <div class="sidebar">
             <h3>⚡ CT POOL</h3>
             <ul>
                 <li id="menu-dashboard" class="active" onclick="switchTab('dashboard')">🏠 Mining Dashboard</li>
                 <li id="menu-deposit" onclick="switchTab('deposit')">📥 Deposit ($)</li>
                 <li id="menu-withdraw" onclick="switchTab('withdraw')">📤 Withdraw ($)</li>
-                <li id="menu-settings" onclick="switchTab('settings')">⚙️ Settings</li>
             </ul>
         </div>
 
         <div class="main-content">
-            
             <div class="navbar">
                 <h2 id="pageTitle" style="font-size: 18px; color: #fff;">Mining Control Panel</h2>
                 <div>
-                    <span style="margin-right: 15px; font-weight: 500; font-size: 14px; color: #9ca3af;">Welcome, <span id="userNameDisplay" style="color: #fff;">User</span> 🎉</span>
+                    <span style="margin-right: 15px; font-size: 14px; color: #9ca3af;">Welcome, <span id="userNameDisplay" style="color: #fff;">User</span> 🎉</span>
                     <button class="btn-logout" onclick="handleLogout()">Logout</button>
                 </div>
             </div>
@@ -591,240 +298,168 @@
                 
                 <!-- TAB 1: DASHBOARD -->
                 <div id="tab-dashboard" class="tab-content">
-                    
-                    <!-- YOUTUBE SUBSCRIBE SPECIAL CARD -->
-                    <div class="yt-subscribe-card">
-                        <div class="yt-info">
-                            <h3>📌 Subscribe YouTube Channel</h3>
-                            <p>Follow <b>@Gost_Bhai8</b> on YouTube to claim your $10 Sign-up Welcome Bonus.</p>
-                        </div>
-                        <a href="https://www.youtube.com/@Gost_Bhai8" target="_blank" class="btn-yt-sub">Subscribe Now</a>
-                    </div>
-
                     <div class="dashboard-modern">
                         
-                        <!-- TOP BTC BAR -->
+                        <!-- LIVE MINING BTC COUNTER -->
                         <div class="top-status-bar">
-                            <span style="color: #9ca3af; font-size: 13px;">Live BTC Mined</span>
+                            <span style="color: #9ca3af; font-size: 13px;">Unclaimed Mined BTC</span>
                             <div class="btc-badge">
                                 <span>₿</span>
-                                <span id="miningLiveVal">0.325297912548</span> BTC
+                                <span id="liveBtcVal">0.000000000000</span> BTC
                             </div>
                         </div>
 
-                        <!-- SPEEDOMETER METER SECTION -->
+                        <!-- SPEEDOMETER -->
                         <div class="gauge-section">
                             <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">BTC MINING SPEED METER</p>
-                            <div class="speed-gauge-visual"></div>
+                            <div class="speed-gauge-visual">
+                                <div id="speedNeedle" class="speed-needle"></div>
+                            </div>
                             <div class="speed-readout">
-                                <div class="speed-val">784,51 <span style="font-size: 16px; color: #a855f7;">KH/s</span></div>
+                                <div class="speed-val"><span id="speedValText">0.00</span> <span style="font-size: 16px; color: #a855f7;">KH/s</span></div>
                             </div>
-                            <div class="boost-tag">
-                                ⚡ Nitro Boost Active
-                            </div>
+
+                            <!-- CLAIM BUTTON -->
+                            <button id="btnClaimMining" class="btn-claim" disabled onclick="claimMiningEarnings()">
+                                ⏳ Claim Mining (Min. 1 Hour required)
+                            </button>
                         </div>
 
-                        <!-- QUICK DEPOSIT BOX UNDER MINING -->
-                        <div class="quick-deposit-box">
-                            <div class="quick-deposit-header">
-                                <h3>💳 Quick Deposit (Investment)</h3>
-                                <span>Minimum Deposit: $5.00</span>
+                        <!-- BALANCE CARDS -->
+                        <div class="cards-grid">
+                            <div class="card">
+                                <h4>Main Wallet Balance ($)</h4>
+                                <p id="totalBalance">$0.00</p>
                             </div>
-                            <form onsubmit="handleQuickDeposit(event)">
-                                <div class="deposit-input-wrapper">
-                                    <input type="number" id="quickDepositAmount" placeholder="Enter Dollars ($) e.g. 5, 10, 50" min="5" step="1" required>
-                                    <button type="submit" class="btn-quick-deposit">Deposit Dollars</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- CONTRACTS LIST SECTION -->
-                        <div class="contracts-header">Active Hashrate Contracts</div>
-
-                        <!-- Contract 1 -->
-                        <div class="contract-card">
-                            <div>
-                                <div class="contract-title">Tier 23 Contract</div>
-                                <div class="contract-val">
-                                    <span style="color: #f7931a;">₿</span> + 0.000005170186 BTC
-                                </div>
-                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-                                    <span class="active-dot"></span>
-                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
-                                </div>
+                            <div class="card">
+                                <h4>Total Claimed Earnings ($)</h4>
+                                <p id="totalMined" style="color: #10b981;">$0.00</p>
                             </div>
-                            <div class="hashrate-text">⚡ 29.97 Th/s</div>
-                        </div>
-
-                        <!-- Contract 2 (Highlighted) -->
-                        <div class="contract-card active-highlight">
-                            <div>
-                                <div class="contract-title">Tier 24 Contract</div>
-                                <div class="contract-val">
-                                    <span style="color: #f7931a;">₿</span> + 0.000005068481 BTC
-                                </div>
-                                <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-                                    <span class="active-dot"></span>
-                                    <span style="font-size: 11px; color: #22c55e; font-weight: bold;">ACTIVE</span>
-                                </div>
+                            <div class="card">
+                                <h4>Total Withdrawn ($)</h4>
+                                <p id="totalWithdrawn" style="color: #ef4444;">$0.00</p>
                             </div>
-                            <div class="hashrate-text">⚡ 45.20 Th/s</div>
                         </div>
 
                     </div>
-
-                    <!-- STATS GRID IN DOLLARS -->
-                    <div class="cards-grid" style="margin-top: 25px;">
-                        <div class="card">
-                            <h4>Active Balance ($)</h4>
-                            <p id="totalBalance">$0.00</p>
-                        </div>
-                        <div class="card">
-                            <h4>Mined Earnings ($)</h4>
-                            <p id="totalMined" style="color: #10b981;">$0.00</p>
-                        </div>
-                        <div class="card">
-                            <h4>Total Withdrawn ($)</h4>
-                            <p id="totalWithdrawn" style="color: #ef4444;">$0.00</p>
-                        </div>
-                    </div>
-
-                    <!-- PROFIT CALCULATOR -->
-                    <div class="calc-box">
-                        <h3 style="font-size: 16px; margin-bottom: 10px;">🧮 Mining Profit Calculator ($)</h3>
-                        <div class="input-group" style="margin-top: 15px; max-width: 300px;">
-                            <label>Enter Investment Dollars ($)</label>
-                            <input type="number" id="calcInput" value="5" min="5" oninput="calculateProfit()">
-                        </div>
-
-                        <div class="calc-grid">
-                            <div class="calc-item">
-                                <span>Hourly Profit</span>
-                                <strong id="calcHourly">$0.011</strong>
-                            </div>
-                            <div class="calc-item">
-                                <span>Daily Profit</span>
-                                <strong id="calcDaily">$0.266</strong>
-                            </div>
-                            <div class="calc-item">
-                                <span>Weekly Profit</span>
-                                <strong id="calcWeekly">$1.866</strong>
-                            </div>
-                            <div class="calc-item">
-                                <span>Monthly Profit</span>
-                                <strong id="calcMonthly">$8.000</strong>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- TAB 2: DEPOSIT PORTAL -->
+                <!-- TAB 2: DEPOSIT -->
                 <div id="tab-deposit" class="tab-content hidden">
-                    <div class="settings-form">
+                    
+                    <!-- PLAN SELECTION -->
+                    <h3 style="margin-bottom: 12px;">Mining Hashrate Plans</h3>
+                    <div class="plans-grid">
+                        <div class="plan-card">
+                            <h4>Starter Plan</h4>
+                            <div class="plan-price">$10.00</div>
+                            <div class="plan-speed">+ 250 KH/s Speed</div>
+                        </div>
+                        <div class="plan-card">
+                            <h4>Pro Plan</h4>
+                            <div class="plan-price">$50.00</div>
+                            <div class="plan-speed">+ 1,500 KH/s Speed</div>
+                        </div>
+                        <div class="plan-card">
+                            <h4>Ultra Plan</h4>
+                            <div class="plan-price">$100.00</div>
+                            <div class="plan-speed">+ 3,500 KH/s Speed</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #161926; padding: 25px; border-radius: 14px; border: 1px solid #2a2e45;">
                         <h3 style="margin-bottom: 10px;">Deposit Money (USD)</h3>
-                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Minimum Deposit: <b>$5.00</b></p>
-                        <div id="depositMsg" class="msg-box"></div>
+                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Min Deposit: <b>$10.00</b></p>
                         
                         <form onsubmit="handleDepositRequest(event)">
-                            <label>Deposit Payment Method</label>
-                            <select id="depositGateway" required>
-                                <option value="" disabled selected>Select Payment Option</option>
-                                <option value="Easypaisa">Easypaisa (03001234567 - Title: Gost Bhai)</option>
-                                <option value="JazzCash">JazzCash (03007654321 - Title: Gost Bhai)</option>
-                            </select>
-
-                            <label>Your Account Number</label>
-                            <input type="text" id="depositSenderNum" placeholder="03XXXXXXXXX" required>
-
-                            <label>Transaction ID (Trx ID)</label>
-                            <input type="text" id="depositTrxId" placeholder="e.g. 92837410293" required>
-
-                            <label>Deposit Amount ($ Dollars)</label>
-                            <input type="number" step="0.01" id="depositAmount" placeholder="5.00" min="5" required>
-
-                            <button type="submit" class="btn-save">Submit Deposit Request</button>
+                            <div class="input-group">
+                                <label>Gateway</label>
+                                <select id="depositGateway" required>
+                                    <option value="Easypaisa">Easypaisa (03001234567)</option>
+                                    <option value="JazzCash">JazzCash (03007654321)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Your Sender Account Number</label>
+                                <input type="text" id="depositSenderNum" placeholder="03XXXXXXXXX" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Transaction ID (TRX ID)</label>
+                                <input type="text" id="depositTrxId" placeholder="e.g. 92837410293" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Deposit Amount ($ Dollars)</label>
+                                <input type="number" id="depositAmount" placeholder="10.00" min="10" required>
+                            </div>
+                            <button type="submit" class="btn-auth" style="background:#10b981;">Submit Deposit</button>
                         </form>
                     </div>
 
+                    <!-- DEPOSIT HISTORY TABLE -->
                     <div class="table-container">
                         <h3>Deposit History</h3>
                         <table>
                             <thead>
                                 <tr>
                                     <th>Gateway</th>
-                                    <th>Sender Number</th>
                                     <th>TRX ID</th>
                                     <th>Amount ($)</th>
-                                    <th>Status</th>
+                                    <th>Status / Action</th>
                                 </tr>
                             </thead>
                             <tbody id="depositHistoryBody">
-                                <tr><td colspan="5" style="text-align:center; color:#9ca3af;">No deposits yet.</td></tr>
+                                <tr><td colspan="4" style="text-align:center; color:#9ca3af;">No deposits yet.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- TAB 3: WITHDRAW PORTAL -->
+                <!-- TAB 3: WITHDRAW -->
                 <div id="tab-withdraw" class="tab-content hidden">
-                    <div class="settings-form">
+                    <div style="background: #161926; padding: 25px; border-radius: 14px; border: 1px solid #2a2e45;">
                         <h3 style="margin-bottom: 10px;">Withdraw Earnings (USD)</h3>
-                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Minimum Withdraw: <b>$5.00</b></p>
+                        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 15px;">Min Withdraw: <b>$5.00</b></p>
                         
                         <form onsubmit="handleWithdrawRequest(event)">
-                            <label>Withdrawal Gateway</label>
-                            <select id="withdrawGateway" required>
-                                <option value="" disabled selected>Select Payment Method</option>
-                                <option value="Easypaisa">Easypaisa</option>
-                                <option value="JazzCash">JazzCash</option>
-                            </select>
-
-                            <label>Account Number</label>
-                            <input type="text" id="withdrawNum" placeholder="03XXXXXXXXX" required>
-
-                            <label>Account Title Name</label>
-                            <input type="text" id="withdrawTitle" placeholder="Full Name" required>
-
-                            <label>Amount ($ Dollars)</label>
-                            <input type="number" step="0.01" id="withdrawAmount" placeholder="5.00" min="5" required>
-
-                            <button type="submit" class="btn-save" style="background:#3b82f6;">Request Withdrawal</button>
+                            <div class="input-group">
+                                <label>Gateway</label>
+                                <select id="withdrawGateway" required>
+                                    <option value="Easypaisa">Easypaisa</option>
+                                    <option value="JazzCash">JazzCash</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Account Title Name</label>
+                                <input type="text" id="withdrawTitle" placeholder="Full Name" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Account Number</label>
+                                <input type="text" id="withdrawNum" placeholder="03XXXXXXXXX" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Amount ($)</label>
+                                <input type="number" id="withdrawAmount" placeholder="5.00" min="5" required>
+                            </div>
+                            <button type="submit" class="btn-auth">Submit Withdrawal</button>
                         </form>
                     </div>
 
+                    <!-- WITHDRAW HISTORY TABLE -->
                     <div class="table-container">
                         <h3>Withdrawal History</h3>
                         <table>
                             <thead>
                                 <tr>
                                     <th>Gateway</th>
-                                    <th>Account Title</th>
-                                    <th>Account Num</th>
+                                    <th>Account Name</th>
                                     <th>Amount ($)</th>
                                     <th>Status / Action</th>
                                 </tr>
                             </thead>
                             <tbody id="withdrawHistoryBody">
-                                <tr><td colspan="5" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>
+                                <tr><td colspan="4" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <!-- TAB 4: SETTINGS -->
-                <div id="tab-settings" class="tab-content hidden">
-                    <div class="settings-form">
-                        <h3 style="margin-bottom: 15px;">Account Settings</h3>
-                        <form onsubmit="handleUpdateSettings(event)">
-                            <label>Email Address</label>
-                            <input type="email" id="settingEmail" readonly style="opacity: 0.6;">
-
-                            <label>New Password</label>
-                            <input type="password" id="settingPassword" placeholder="Enter new password">
-
-                            <button type="submit" class="btn-save">Save Changes</button>
-                        </form>
                     </div>
                 </div>
 
@@ -833,30 +468,43 @@
     </div>
 
     <script>
-        let mainVal = 0.325297912548;
+        // GLOBAL USER STATE
+        let activeMining = false;
+        let miningSpeedKH = 0;
+        let currentBtcMined = 0.000000000000;
+        let userBalanceUSD = 0.00;
+        let totalClaimedUSD = 0.00;
+        let totalWithdrawnUSD = 0.00;
+        let claimTimer = 0; // seconds timer for claim (1 hour = 3600 sec)
+
+        let depositHistory = JSON.parse(localStorage.getItem('deposits')) || [];
         let withdrawalHistory = JSON.parse(localStorage.getItem('withdrawals')) || [];
 
-        // Page Load hone par state checking
         window.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const currentUser = localStorage.getItem('currentUser');
-            const activeTab = localStorage.getItem('activeTab') || 'dashboard';
-
-            if (isLoggedIn === 'true') {
-                document.getElementById('userNameDisplay').innerText = currentUser || 'Miner';
+            if (localStorage.getItem('isLoggedIn') === 'true') {
                 showPage('dashboardPage');
-                switchTab(activeTab);
+                renderDepositHistory();
                 renderWithdrawHistory();
             } else {
-                showPage('signupPage');
+                showPage('loginPage');
             }
         });
 
+        // LIVE MINING LOOP
         setInterval(() => {
-            mainVal += 0.000000000005;
-            const mainElem = document.getElementById("miningLiveVal");
-            if (mainElem) mainElem.innerText = mainVal.toFixed(12);
-        }, 2000);
+            if (activeMining) {
+                currentBtcMined += (miningSpeedKH * 0.000000000002);
+                document.getElementById('liveBtcVal').innerText = currentBtcMined.toFixed(12);
+
+                claimTimer++;
+                // Enable claim button after 1 hour (3600 seconds)
+                if (claimTimer >= 3600) {
+                    const btn = document.getElementById('btnClaimMining');
+                    btn.disabled = false;
+                    btn.innerText = "⚡ Claim Mined BTC Now!";
+                }
+            }
+        }, 1000);
 
         function showPage(pageId) {
             document.querySelectorAll('.auth-container, .dashboard-layout').forEach(el => el.classList.add('hidden'));
@@ -869,111 +517,168 @@
             
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
             document.getElementById(`menu-${tabName}`).classList.add('active');
-            
-            localStorage.setItem('activeTab', tabName);
-
-            const titles = {
-                'dashboard': 'Mining Control Panel',
-                'deposit': 'Deposit Portal ($)',
-                'withdraw': 'Withdraw Earnings ($)',
-                'settings': 'Account Settings'
-            };
-            document.getElementById('pageTitle').innerText = titles[tabName];
-        }
-
-        function handleSendCode(e) {
-            e.preventDefault();
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('verifyForm').classList.remove('hidden');
-        }
-
-        function handleVerifyAndRegister(e) {
-            e.preventDefault();
-            document.getElementById('successModal').classList.remove('hidden');
-        }
-
-        function closeModalAndRedirect() {
-            document.getElementById('successModal').classList.add('hidden');
-            showPage('loginPage');
         }
 
         function handleLogin(e) {
             e.preventDefault();
-            const username = document.getElementById('loginId').value || 'Miner';
-            
+            const username = document.getElementById('loginId').value || 'User';
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('currentUser', username);
-            
             document.getElementById('userNameDisplay').innerText = username;
             showPage('dashboardPage');
             switchTab('dashboard');
-            renderWithdrawHistory();
         }
 
         function handleLogout() {
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('activeTab');
             showPage('loginPage');
         }
 
-        function handleQuickDeposit(e) {
-            e.preventDefault();
-            const amount = document.getElementById('quickDepositAmount').value;
-            alert(`$${amount} Deposit request initiated! Redirecting to deposit portal...`);
-            switchTab('deposit');
-            document.getElementById('depositAmount').value = amount;
-        }
-
-        function calculateProfit() {
-            const amount = parseFloat(document.getElementById('calcInput').value) || 0;
-            const monthly = amount * 1.6;
-            const daily = monthly / 30;
-            const hourly = daily / 24;
-            const weekly = daily * 7;
-
-            document.getElementById('calcHourly').innerText = `$${hourly.toFixed(3)}`;
-            document.getElementById('calcDaily').innerText = `$${daily.toFixed(3)}`;
-            document.getElementById('calcWeekly').innerText = `$${weekly.toFixed(3)}`;
-            document.getElementById('calcMonthly').innerText = `$${monthly.toFixed(3)}`;
-        }
-
+        /* DEPOSIT PROCESS */
         function handleDepositRequest(e) {
             e.preventDefault();
-            alert("Deposit request submitted successfully!");
-        }
-
-        /* WITHDRAWAL PROCESS & HISTORY HANDLER */
-        function handleWithdrawRequest(e) {
-            e.preventDefault();
-            
-            const gateway = document.getElementById('withdrawGateway').value;
-            const num = document.getElementById('withdrawNum').value;
-            const title = document.getElementById('withdrawTitle').value;
-            const amount = parseFloat(document.getElementById('withdrawAmount').value).toFixed(2);
-            
-            const trxId = 'WD-' + Math.floor(10000000 + Math.random() * 90000000);
+            const gateway = document.getElementById('depositGateway').value;
+            const senderNum = document.getElementById('depositSenderNum').value;
+            const trxId = document.getElementById('depositTrxId').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value).toFixed(2);
             const dateStr = new Date().toLocaleString();
 
-            const newWithdrawal = {
+            const newDeposit = {
                 id: Date.now(),
-                trxId: trxId,
-                gateway: gateway,
-                num: num,
-                title: title,
-                amount: amount,
+                gateway, senderNum, trxId, amount,
                 status: 'Pending',
                 date: dateStr
             };
+
+            depositHistory.unshift(newDeposit);
+            localStorage.setItem('deposits', JSON.stringify(depositHistory));
+            renderDepositHistory();
+
+            // English Notice Popup for Verification (Says up to 30 minutes)
+            alert("Your payment is being verified. It will take up to 30 minutes to reflect in your account.");
+            e.target.reset();
+
+            // Auto-Approved Backend Simulation after 3 Minutes (180000 ms)
+            setTimeout(() => {
+                const item = depositHistory.find(d => d.id === newDeposit.id);
+                if (item && item.status === 'Pending') {
+                    item.status = 'Approved';
+                    localStorage.setItem('deposits', JSON.stringify(depositHistory));
+                    renderDepositHistory();
+
+                    // Start Speedometer and Mining
+                    activateMiningEngine(parseFloat(amount));
+                }
+            }, 180000); // 3 minutes timeout
+        }
+
+        function activateMiningEngine(amountUSD) {
+            activeMining = true;
+            // Speed calculation according to deposit plan ($10 = 250 KH/s)
+            miningSpeedKH = (amountUSD / 10) * 250;
+            
+            document.getElementById('speedValText').innerText = miningSpeedKH.toFixed(2);
+            document.getElementById('speedNeedle').classList.add('active');
+            
+            alert(`🎉 Payment Verified! $${amountUSD} plan activated with ${miningSpeedKH} KH/s Mining Speed!`);
+        }
+
+        function renderDepositHistory() {
+            const tbody = document.getElementById('depositHistoryBody');
+            tbody.innerHTML = '';
+
+            if (depositHistory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#9ca3af;">No deposits yet.</td></tr>';
+                return;
+            }
+
+            depositHistory.forEach(item => {
+                const tr = document.createElement('tr');
+                let statusHtml = item.status === 'Pending' 
+                    ? `<span class="status-badge status-pending">Pending Verification</span>`
+                    : `<span class="status-badge status-approved">Approved</span><br><button class="btn-receipt" onclick="viewDepositReceipt(${item.id})">🧾 Receipt</button>`;
+
+                tr.innerHTML = `
+                    <td>${item.gateway}</td>
+                    <td>${item.trxId}</td>
+                    <td style="color:#10b981; font-weight:bold;">$${item.amount}</td>
+                    <td>${statusHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewDepositReceipt(id) {
+            const item = depositHistory.find(d => d.id === id);
+            if (!item) return;
+
+            document.getElementById('receiptContent').innerHTML = `
+                <div class="receipt-row"><span>Type:</span> <strong>Deposit</strong></div>
+                <div class="receipt-row"><span>Status:</span> <strong style="color:#10b981;">${item.status}</strong></div>
+                <div class="receipt-row"><span>TRX ID:</span> <strong>${item.trxId}</strong></div>
+                <div class="receipt-row"><span>Gateway:</span> <strong>${item.gateway}</strong></div>
+                <div class="receipt-row"><span>Sender Num:</span> <strong>${item.senderNum}</strong></div>
+                <div class="receipt-row"><span>Amount Deposited:</span> <strong style="color:#10b981;">$${item.amount} USD</strong></div>
+                <div class="receipt-row"><span>Date & Time:</span> <strong>${item.date}</strong></div>
+            `;
+            document.getElementById('receiptModal').classList.remove('hidden');
+        }
+
+        /* CLAIM MINING PROFIT */
+        function claimMiningEarnings() {
+            if (!activeMining) return;
+
+            const earnedUSD = currentBtcMined * 60000; // Mock Conversion to USD
+            userBalanceUSD += earnedUSD;
+            totalClaimedUSD += earnedUSD;
+
+            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
+            document.getElementById('totalMined').innerText = `$${totalClaimedUSD.toFixed(2)}`;
+
+            // Reset Live Mining Count & Timer
+            currentBtcMined = 0.000000000000;
+            document.getElementById('liveBtcVal').innerText = "0.000000000000";
+            
+            claimTimer = 0;
+            const btn = document.getElementById('btnClaimMining');
+            btn.disabled = true;
+            btn.innerText = "⏳ Claim Mining (Min. 1 Hour required)";
+
+            alert(`🎉 Success! Mined BTC converted to $${earnedUSD.toFixed(2)} and added to your Balance!`);
+        }
+
+        /* WITHDRAW PROCESS */
+        function handleWithdrawRequest(e) {
+            e.preventDefault();
+            const gateway = document.getElementById('withdrawGateway').value;
+            const title = document.getElementById('withdrawTitle').value;
+            const num = document.getElementById('withdrawNum').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value).toFixed(2);
+            
+            if (parseFloat(amount) > userBalanceUSD) {
+                alert("Insufficient Balance to withdraw!");
+                return;
+            }
+
+            const newWithdrawal = {
+                id: Date.now(),
+                trxId: 'WD-' + Math.floor(10000000 + Math.random() * 90000000),
+                gateway, title, num, amount,
+                status: 'Pending',
+                date: new Date().toLocaleString()
+            };
+
+            userBalanceUSD -= parseFloat(amount);
+            totalWithdrawnUSD += parseFloat(amount);
+            document.getElementById('totalBalance').innerText = `$${userBalanceUSD.toFixed(2)}`;
+            document.getElementById('totalWithdrawn').innerText = `$${totalWithdrawnUSD.toFixed(2)}`;
 
             withdrawalHistory.unshift(newWithdrawal);
             localStorage.setItem('withdrawals', JSON.stringify(withdrawalHistory));
             renderWithdrawHistory();
 
-            alert("Withdrawal request submitted successfully! Pending approval.");
+            alert("Withdrawal request submitted! Processing soon.");
             e.target.reset();
 
-            // Auto Approve Simulation (3 Seconds delay)
             setTimeout(() => {
                 const item = withdrawalHistory.find(w => w.id === newWithdrawal.id);
                 if (item) {
@@ -989,59 +694,44 @@
             tbody.innerHTML = '';
 
             if (withdrawalHistory.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#9ca3af;">No withdrawals yet.</td></tr>';
                 return;
             }
 
             withdrawalHistory.forEach(item => {
                 const tr = document.createElement('tr');
-                let statusHtml = '';
-
-                if (item.status === 'Pending') {
-                    statusHtml = `<span class="status-badge status-pending">Pending</span>`;
-                } else {
-                    statusHtml = `
-                        <span class="status-badge status-approved">Approved</span><br>
-                        <button class="btn-receipt" onclick="viewReceipt(${item.id})">🧾 View Receipt</button>
-                    `;
-                }
+                let statusHtml = item.status === 'Pending' 
+                    ? `<span class="status-badge status-pending">Pending</span>`
+                    : `<span class="status-badge status-approved">Approved</span><br><button class="btn-receipt" onclick="viewWithdrawReceipt(${item.id})">🧾 Receipt</button>`;
 
                 tr.innerHTML = `
                     <td>${item.gateway}</td>
                     <td>${item.title}</td>
-                    <td>${item.num}</td>
-                    <td style="color:#10b981; font-weight:bold;">$${item.amount}</td>
+                    <td style="color:#ef4444; font-weight:bold;">$${item.amount}</td>
                     <td>${statusHtml}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function viewReceipt(id) {
+        function viewWithdrawReceipt(id) {
             const item = withdrawalHistory.find(w => w.id === id);
             if (!item) return;
 
-            const content = document.getElementById('receiptContent');
-            content.innerHTML = `
+            document.getElementById('receiptContent').innerHTML = `
+                <div class="receipt-row"><span>Type:</span> <strong>Withdrawal</strong></div>
                 <div class="receipt-row"><span>Status:</span> <strong style="color:#10b981;">${item.status}</strong></div>
                 <div class="receipt-row"><span>TRX ID:</span> <strong>${item.trxId}</strong></div>
                 <div class="receipt-row"><span>Gateway:</span> <strong>${item.gateway}</strong></div>
                 <div class="receipt-row"><span>Account Name:</span> <strong>${item.title}</strong></div>
-                <div class="receipt-row"><span>Account Number:</span> <strong>${item.num}</strong></div>
-                <div class="receipt-row"><span>Amount Withdrawn:</span> <strong style="color:#10b981;">$${item.amount} USD</strong></div>
+                <div class="receipt-row"><span>Amount Withdrawn:</span> <strong style="color:#ef4444;">$${item.amount} USD</strong></div>
                 <div class="receipt-row"><span>Date & Time:</span> <strong>${item.date}</strong></div>
             `;
-
             document.getElementById('receiptModal').classList.remove('hidden');
         }
 
         function closeReceiptModal() {
             document.getElementById('receiptModal').classList.add('hidden');
-        }
-
-        function handleUpdateSettings(e) {
-            e.preventDefault();
-            alert("Settings updated!");
         }
     </script>
 </body>
